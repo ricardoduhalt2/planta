@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Petgas Plant Presentation</title>
+  <link rel="icon" href="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-image: linear-gradient(to bottom right, #1f2937, #111827); /* Darker gradient background */
+      color: #d1d5db; /* Lighter base text color for dark background */
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px; /* Thinner scrollbar */
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1f2937; /* Darker track to match new body bg */
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #009A44; /* Petgas Green */
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #007A33; /* Darker Petgas Green */
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55), transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Animated Gradient Title */
+    .animated-gradient-title {
+      background-image: linear-gradient(to right, #009A44, #f1c40f, #009A44); /* Petgas Green, Modern Yellow, Petgas Green */
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: textGradientAnimation 4s linear infinite;
+    }
+
+    @keyframes textGradientAnimation {
+      0% { background-position: 0% center; }
+      100% { background-position: -200% center; }
+    }
+
+    /* Animated Logo Background for PlantDetailView Header */
+    .animated-logo-background {
+      display: inline-flex; /* Aligns well with image */
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem; /* Adjust padding as needed */
+      border-radius: 9999px; /* Circular */
+      background: linear-gradient(135deg, #34495e, #2c3e50, #34495e); /* Dark Grey Gradient */
+      background-size: 200% 200%;
+      animation: animatedLogoBgPulse 4s ease-in-out infinite;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.1);
+    }
+    
+    @keyframes animatedLogoBgPulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.1);
+        background-position: 0% 50%;
+      }
+      50% {
+        transform: scale(1.03); /* Subtle pulse */
+        box-shadow: 0 6px 20px rgba(44,62,80,0.3), 0 0 0 5px rgba(255,255,255,0.15); /* Enhanced shadow */
+        background-position: 100% 50%;
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.1);
+        background-position: 0% 50%;
+      }
+    }
+
+    .hero-logo-effects {
+      filter: 
+        /* Glow effect - using PETGAS_ACCENT_GREEN (#A0D468) and increased brightness */
+        drop-shadow(0px 0px 12px rgba(160, 212, 104, 0.75)) /* Main glow, brighter */
+        drop-shadow(0px 0px 20px rgba(160, 212, 104, 0.55)); /* Softer, wider ambient glow, brighter */
+    }
+    
+    /* Animated Footer Logo */
+    .animated-footer-logo {
+      animation: footerLogoGlowPulse 3s infinite ease-in-out;
+      filter: drop-shadow(0px 0px 6px rgba(160, 212, 104, 0.7)) /* PETGAS_ACCENT_GREEN glow */
+              drop-shadow(0px 0px 12px rgba(140, 198, 63, 0.5)); /* PETGAS_LIGHT_GREEN subtle wider glow */
+    }
+
+    @keyframes footerLogoGlowPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+    }
+
+    /* Glass Buttons */
+    .glass-button {
+      padding: 0.5rem 0.75rem; /* Adjust as needed for sm/xs text in Navbar */
+      border-radius: 0.5rem; /* Tailwind's rounded-lg */
+      font-weight: 600; /* semibold */
+      transition: all 0.25s ease-out;
+      position: relative;
+      overflow: hidden;
+      color: #e5e7eb; /* Tailwind gray-200, good default for dark glass */
+      background-color: rgba(255, 255, 255, 0.07); /* Darker glass effect */
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); /* Safari */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .glass-button::before { /* Animated gradient layer */
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; /* Start off-screen for animation */
+      width: 300%; height: 100%;
+      z-index: -1;
+      background-image: linear-gradient(
+        90deg,
+        rgba(0, 154, 68, 0.5), /* PETGAS_GREEN with alpha */
+        rgba(140, 198, 63, 0.6), /* PETGAS_LIGHT_GREEN with alpha */
+        rgba(160, 212, 104, 0.7), /* PETGAS_ACCENT_GREEN with alpha */
+        rgba(140, 198, 63, 0.6), /* PETGAS_LIGHT_GREEN with alpha */
+        rgba(0, 154, 68, 0.5)  /* PETGAS_GREEN with alpha */
+      );
+      background-size: 100% 100%; /* Cover the 300% width fully, effectively meaning it repeats */
+      transition: opacity 0.3s ease-out, transform 0.4s ease-out;
+      opacity: 0; /* Initially hidden */
+      animation: buttonGradientAnimation 6s linear infinite;
+    }
+    
+    @keyframes buttonGradientAnimation {
+        0% { transform: translateX(0%); }
+        100% { transform: translateX(-200%); } /* Moves two full widths to loop the 300% wide gradient */
+    }
+
+    .glass-button:hover, .glass-button:focus {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+      background-color: rgba(255, 255, 255, 0.1); /* Slightly lighter glass on hover */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    }
+
+    .glass-button:hover::before, .glass-button:focus::before {
+      opacity: 1; /* Show gradient on hover/focus */
+    }
+    
+    /* Specific active state for Navbar buttons */
+    .glass-button-active {
+      color: #ffffff !important; /* Ensure text is white */
+      background-color: rgba(0, 154, 68, 0.35) !important; /* Petgas green subtly in background, increased opacity */
+      border-color: rgba(0, 154, 68, 0.6) !important;
+      box-shadow: inset 0 0 10px rgba(140, 198, 63, 0.3), 0 2px 8px rgba(0,0,0,0.3); /* Inner glow and lift */
+    }
+    .glass-button-active::before {
+      opacity: 0.9 !important; /* Make gradient more visible for active */
+    }
+
+
+    /* Custom Select for Mobile Navbar */
+    .custom-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: rgba(31, 41, 55, 0.7); /* Tailwind gray-800 with alpha */
+      border: 1px solid rgba(75, 85, 99, 0.8); /* Tailwind gray-600 with alpha */
+      border-radius: 0.375rem; /* Tailwind rounded-md */
+      padding: 0.625rem 2.5rem 0.625rem 0.75rem; /* py-2.5 pr-10 pl-3 */
+      font-size: 0.875rem; /* text-sm */
+      font-weight: 600; /* semibold */
+      color: #d1d5db; /* Tailwind gray-300 */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23009A44'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1.5em 1.5em;
+      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    .custom-select:focus {
+      outline: none;
+      border-color: #009A44; /* Petgas Green */
+      box-shadow: 0 0 0 2px rgba(0, 154, 68, 0.3);
+    }
+    .custom-select option {
+      background-color: #1f2937; /* Dark background for options */
+      color: #d1d5db;
+    }
+
+    /* Additional global styles for hypermodern look */
+    .app-container {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Hypermodern Loading Screen Styles */
+    @keyframes logoBreathe {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.03); opacity: 1; }
+    }
+    .animated-logo-breathe {
+      animation: logoBreathe 2.5s infinite ease-in-out;
+    }
+
+    .pulsing-dots-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 1rem; /* Space below logo */
+      margin-bottom: 1rem; /* Space above text */
+    }
+    .pulsing-dots-loader div {
+      width: 12px; /* Slightly larger dots */
+      height: 12px;
+      margin: 0 5px; /* Slightly more space between dots */
+      background-color: #009A44; /* Petgas Green */
+      border-radius: 50%;
+      animation: dotPulse 1.4s infinite ease-in-out both;
+    }
+    .pulsing-dots-loader div:nth-child(1) { animation-delay: -0.32s; }
+    .pulsing-dots-loader div:nth-child(2) { animation-delay: -0.16s; }
+    .pulsing-dots-loader div:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes dotPulse {
+      0%, 80%, 100% { 
+        transform: scale(0.6);  /* Start smaller */
+        opacity: 0.5;
+      }
+      40% { 
+        transform: scale(1.0); 
+        opacity: 1;
+      }
+    }
+    .title-with-outline {
+      text-shadow: 
+        -1px -1px 0 #111827,  
+         1px -1px 0 #111827,
+        -1px  1px 0 #111827,
+         1px  1px 0 #111827,
+         0px 0px 3px rgba(17, 24, 39, 0.5); /* Softer small blur */
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.1.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.1.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@19.1.0/jsx-runtime",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="app-container">
+  <div id="tsparticles-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -10;"></div>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.5.0/tsparticles.slim.bundle.min.js"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

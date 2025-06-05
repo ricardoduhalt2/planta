@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados */
+body {
+  @apply bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Estilos de scrollbar personalizados */
+::-webkit-scrollbar {
+  @apply w-1.5 h-1.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-petgas-green rounded;
+}
+
+/* Efectos de botones de vidrio */
+.glass-button {
+  @apply relative overflow-hidden backdrop-blur-md bg-white/10 border border-white/20 rounded-lg px-6 py-3 font-medium transition-all duration-300;
+}
+
+.glass-button:hover {
+  @apply bg-white/20 transform -translate-y-0.5 shadow-lg;
+}
+
+.glass-button:active {
+  @apply transform translate-y-0;
+}
+
+/* Efectos de gradiente animado */
+.animated-gradient-title {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-petgas-green via-petgas-light-green to-petgas-green bg-[length:200%_auto];
+  animation: gradient 3s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Efectos de logo */
+.hero-logo-effects {
+  @apply transition-all duration-500 hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(0,154,68,0.5)];
+}

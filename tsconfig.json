@@ -23,8 +23,31 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    /* Paths */
+    "baseUrl": ".",
     "paths": {
-      "@/*" :  ["./*"]
-    }
-  }
+      "@/*": ["./*"],
+      "~/*": ["./src/*"]
+    },
+
+    /* Type Checking */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "jsxImportSource": "react",
+    "types": ["node"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ],
+  "exclude": ["node_modules", "dist"]
 }

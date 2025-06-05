@@ -22,9 +22,9 @@ export const translations: Record<Language, Record<string, any>> = {
     petgasMainLogoAlt: 'Logo Principal de Petgas',
     
     // Plant Card Display Names
-    p90_card_display_name: 'Planta PETGAS P-90',
-    petgas_4k_card_display_name: 'Planta PETGAS 4K Doble Reactor',
-    petgas_700kg_card_display_name: 'Planta PETGAS 700kg Doble Reactor',
+    p90_card_display_name: 'P-90 Plant',
+    petgas_4k_card_display_name: '4K Double Reactor Plant',
+    petgas_700kg_card_display_name: '700kg Double Reactor Plant',
 
     // Plant View
     plantSpecificLogoAlt: 'Logo específico de la planta',

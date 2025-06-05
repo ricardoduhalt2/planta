@@ -6,7 +6,10 @@ import Footer from './components/Footer';
 import { PlantData } from './types';
 import { ALL_PLANTS_DATA, PETGAS_GREEN, PETGAS_WHITE, MAIN_LOGO_URL, NAVBAR_LOGO_URL } from './constants';
 import { useLanguage } from './contexts/LanguageContext';
-import ParticlesBackground from './components/ParticlesBackground'; // Ensure relative path
+import ParticlesBackground from './components/ParticlesBackground';
+
+// Importar estilos de Tailwind CSS
+import './styles/main.css';
 
 const App: React.FC = () => {
   const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);

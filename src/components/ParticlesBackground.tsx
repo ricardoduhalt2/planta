@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 // Declare tsParticles as it's loaded from CDN
 declare var tsParticles: any;
@@ -22,12 +22,12 @@ const ParticlesBackground: React.FC = () => {
         autoPlay: true,
         background: {
           color: {
-            value: 'transparent' // Background is handled by body CSS
+            value: 'transparent' // Background is handled by Three.js canvas
           },
         },
         fullScreen: {
           enable: false, // The container div handles positioning
-          zIndex: -10
+          zIndex: 0
         },
         particles: {
           number: {
@@ -38,26 +38,26 @@ const ParticlesBackground: React.FC = () => {
             }
           },
           color: {
-            value: ["#009A44", "#8CC63F", "#A0D468", "#FFFFFF", "#f1c40f", "#ecf0f1"] // Petgas greens, whites, accent yellow
+            value: ["#00ff88", "#00ccff", "#88ff88", "#a0f0c0", "#88ffff"] // Tonos de verde y cian que combinen con el fondo
           },
           shape: {
             type: "circle",
           },
           opacity: {
-            value: { min: 0.3, max: 0.7 }, // Varied opacity
+            value: { min: 0.2, max: 0.6 }, // Más transparentes para combinar con el fondo
             animation: {
               enable: true,
               speed: 0.8,
-              minimumValue: 0.2,
+              minimumValue: 0.1,
               sync: false
             }
           },
           size: {
-            value: { min: 15, max: 45 }, // Significantly larger particles
+            value: { min: 10, max: 30 }, // Tamaño más pequeño para mejor integración
             animation: {
               enable: true,
               speed: 3,
-              minimumValue: 10,
+              minimumValue: 5,
               sync: false,
               startValue: "random",
               destroy: "none"
@@ -68,7 +68,7 @@ const ParticlesBackground: React.FC = () => {
           },
           move: {
             enable: true,
-            speed: {min: 0.3, max: 1.2}, // Slower movement
+            speed: {min: 0.2, max: 0.8}, // Movimiento más lento
             direction: "top", // Primarily upwards
             random: true,
             straight: false,
@@ -80,12 +80,14 @@ const ParticlesBackground: React.FC = () => {
               enable: false,
             },
             trail: {
-              enable: false,
+              enable: true,
+              length: 10,
+              fillColor: "#000000"
             },
             wobble: { // Gentle wobble for organic feel
                 enable: true,
-                distance: 10,
-                speed: 10
+                distance: 5,
+                speed: 5
             },
           },
           zIndex: {

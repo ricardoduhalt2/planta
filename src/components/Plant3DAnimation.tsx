@@ -358,20 +358,21 @@ const Model: React.FC = () => {
   const [showWireframe, setShowWireframe] = useState(false);
   const modelRef = useRef<THREE.Group>(null);
   
-  // Material para el modelo industrial
+  // Material para el modelo industrial con animación de color
   const standardMaterial = useMemo(() => new THREE.MeshStandardMaterial({
-    color: 0x00aaff,
-    metalness: 0.7,
-    roughness: 0.3,
-    emissive: 0x003366,
-    emissiveIntensity: 0.2,
+    color: 0x00ff88, // Verde brillante
+    metalness: 0.2,
+    roughness: 0.8,
+    emissive: 0x00aa55, // Verde más oscuro para la emisión
+    emissiveIntensity: 0.5,
     transparent: true,
-    opacity: 0.95,
+    opacity: 0.7,
+    side: THREE.DoubleSide,
   }), []);
   
-  // Material para el wireframe
+  // Material para el wireframe con animación
   const wireframeMaterial = useMemo(() => 
-    createWireframeMaterial(0x00aaff, 0.8)
+    createWireframeMaterial(0x00ff88, 0.8)
   , []);
   
   // Alternar entre modelos cada 5 segundos
@@ -383,10 +384,25 @@ const Model: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
   
-  // Animación de rotación suave
-  useFrame((_, delta) => {
+  // Animación de rotación y pulsación
+  useFrame(({ clock }) => {
     if (modelRef.current) {
-      modelRef.current.rotation.y += delta * 0.5; // Rotación suave
+      const time = clock.getElapsedTime();
+      
+      // Rotación suave
+      modelRef.current.rotation.y = time * 0.2;
+      
+      // Pulsación sutil
+      const pulse = 1 + Math.sin(time * 0.5) * 0.02;
+      modelRef.current.scale.set(pulse, pulse, pulse);
+      
+      // Cambio de color basado en el tiempo
+      if (standardMaterial) {
+        const hue = (time * 0.05) % 1.0;
+        const color = new THREE.Color().setHSL(hue, 0.8, 0.5);
+        standardMaterial.emissive.lerp(color, 0.1);
+        standardMaterial.needsUpdate = true;
+      }
     }
   });
   
@@ -475,27 +491,40 @@ const Plant3DAnimation: React.FC = () => {
         <fog attach="fog" args={['#001a0a', 10, 150]} />
         <GradientBackground />
         
-        {/* Luces principales */}
-        <ambientLight intensity={0.3} color="#ffffff" />
+        {/* Luces principales con tonos verdes */}
+        <ambientLight intensity={0.5} color="#88ff88" />
+        
+        {/* Luz direccional principal */}
         <directionalLight
           position={[10, 20, 10]}
-          intensity={1.2}
-          color="#ffffff"
+          intensity={1.5}
+          color="#88ff88"
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-near={0.5}
           shadow-camera-far={500}
         />
+        
+        {/* Luz ambiental con tonos verdes */}
         <hemisphereLight
-          args={[0x88ccff, 0x002200, 0.5]}
+          args={[0x88ff88, 0x002200, 0.7]}
           position={[0, 20, 0]}
         />
+        
+        {/* Luces de relleno con animación */}
         <pointLight
-          position={[0, 15, 10]}
-          intensity={0.5}
-          color="#88ccff"
-          distance={50}
+          position={[10, 10, 10]}
+          intensity={1.2}
+          color="#00ff88"
+          distance={30}
+          decay={2}
+        />
+        <pointLight
+          position={[-10, 5, -10]}
+          intensity={0.8}
+          color="#88ff00"
+          distance={40}
           decay={1.5}
         />
         
@@ -515,7 +544,7 @@ const Plant3DAnimation: React.FC = () => {
         />
         
         {/* Grid helper para referencia */}
-        <gridHelper args={[20, 20, 0x444444, 0x222222]} />
+        <gridHelper args={[20, 20, 0x00ff88, 0x007744]} />
         
         {/* Efecto de partículas flotantes */}
         <FloatingParticles count={200} />

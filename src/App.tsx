@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import PlantDetailView from './components/PlantDetailView';
@@ -7,6 +8,7 @@ import { ALL_PLANTS_DATA } from './constants';
 import { useLanguage } from './contexts/LanguageContext';
 import ParticlesBackground from './components/ParticlesBackground';
 import LoadingScreen from './components/LoadingScreen';
+import { EtherealSky } from './components/EtherealSky';
 
 // Importar estilos de Tailwind CSS
 import './styles/main.css';
@@ -15,7 +17,8 @@ const App: React.FC = () => {
   const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-  const { t } = useLanguage();
+  // Se mantiene useLanguage para futuras traducciones
+  useLanguage();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,22 +56,38 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-transparent"> {/* Background is now on body */}
-      <ParticlesBackground /> {/* Main app particle background component */}
-      <Navbar 
-        plants={ALL_PLANTS_DATA} 
-        selectedPlantId={selectedPlantId}
-        onSelectPlant={handleSelectPlant}
-        onShowHome={handleShowHome}
-      />
-      <main className={`flex-grow transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        {selectedPlantData ? (
-          <PlantDetailView plant={selectedPlantData} />
-        ) : (
-          <HeroSection plants={ALL_PLANTS_DATA} onSelectPlant={handleSelectPlant} />
-        )}
-      </main>
-      <Footer />
+    <div className="relative flex flex-col min-h-screen overflow-hidden">
+      {/* Fondo etéreo */}
+      <div className="fixed inset-0 -z-10">
+        <Canvas>
+          <Suspense fallback={null}>
+            <EtherealSky />
+          </Suspense>
+        </Canvas>
+      </div>
+      
+      {/* Capa de partículas */}
+      <div className="fixed inset-0 -z-10">
+        <ParticlesBackground />
+      </div>
+      
+      {/* Contenido principal */}
+      <div className="relative z-10">
+        <Navbar 
+          plants={ALL_PLANTS_DATA} 
+          selectedPlantId={selectedPlantId}
+          onSelectPlant={handleSelectPlant}
+          onShowHome={handleShowHome}
+        />
+        <main className={`flex-grow transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+          {selectedPlantData ? (
+            <PlantDetailView plant={selectedPlantData} />
+          ) : (
+            <HeroSection plants={ALL_PLANTS_DATA} onSelectPlant={handleSelectPlant} />
+          )}
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };

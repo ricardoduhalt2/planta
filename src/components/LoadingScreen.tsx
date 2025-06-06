@@ -4,6 +4,7 @@ import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { Text as TextImpl } from 'troika-three-text';
 import { useLanguage } from '../contexts/LanguageContext';
 import { MAIN_LOGO_URL } from '../constants';
+import EtherealSky from './EtherealSky';
 
 // Extend Three.js with Text
 declare global {
@@ -206,155 +207,6 @@ const ConcentricRings: React.FC<{ count?: number }> = ({ count = 5 }) => {
   );
 };
 
-// Componente de cielo etéreo mejorado
-const EtherealSky = () => {
-  const skyRef = useRef<THREE.Mesh>(null);
-  const shaderRef = useRef<THREE.ShaderMaterial>(null);
-  
-  useFrame(({ clock }) => {
-    if (shaderRef.current) {
-      const time = clock.getElapsedTime();
-      shaderRef.current.uniforms.time.value = time * 0.1;
-      
-      // Cambio sutil de colores con el tiempo
-      shaderRef.current.uniforms.color1.value.lerp(
-        new THREE.Color(
-          0.0 + Math.sin(time * 0.2) * 0.1,
-          0.2 + Math.sin(time * 0.15) * 0.1,
-          0.1 + Math.sin(time * 0.1) * 0.1
-        ),
-        0.01
-      );
-    }
-    
-    if (skyRef.current) {
-      skyRef.current.rotation.y += 0.0003;
-    }
-  });
-
-  return (
-    <mesh ref={skyRef}>
-      <sphereGeometry args={[500, 64, 32]} />
-      <shaderMaterial
-        ref={shaderRef}
-        side={THREE.BackSide}
-        uniforms={{
-          time: { value: 0 },
-          color1: { value: new THREE.Color(0x001a0a) },
-          color2: { value: new THREE.Color(0x003311) },
-          color3: { value: new THREE.Color(0x00aa55) },
-        }}
-        vertexShader={`
-          varying vec3 vWorldPosition;
-          varying vec2 vUv;
-          
-          void main() {
-            vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-            vWorldPosition = worldPosition.xyz;
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `}
-        fragmentShader={`
-          uniform vec3 color1;
-          uniform vec3 color2;
-          uniform vec3 color3;
-          uniform float time;
-          
-          varying vec3 vWorldPosition;
-          varying vec2 vUv;
-          
-          // Función de ruido de Perlin simplificada
-          float noise(vec3 p) {
-            return fract(sin(dot(p, vec3(12.9898, 78.233, 45.5432))) * 43758.5453);
-          }
-          
-          // Función de ruido suavizado
-          float smoothNoise(vec3 p) {
-            vec3 i = floor(p);
-            vec3 f = fract(p);
-            
-            // Interpolación cúbica
-            f = f * f * (3.0 - 2.0 * f);
-            
-            // Muestreo de los 8 vértices del cubo
-            float a = noise(i);
-            float b = noise(i + vec3(1.0, 0.0, 0.0));
-            float c = noise(i + vec3(0.0, 1.0, 0.0));
-            float d = noise(i + vec3(1.0, 1.0, 0.0));
-            float e = noise(i + vec3(0.0, 0.0, 1.0));
-            float f2 = noise(i + vec3(1.0, 0.0, 1.0));
-            float g = noise(i + vec3(0.0, 1.0, 1.0));
-            float h = noise(i + vec3(1.0, 1.0, 1.0));
-            
-            // Interpolación trilineal
-            float i1 = mix(a, b, f.x);
-            float i2 = mix(c, d, f.x);
-            float i3 = mix(e, f2, f.x);
-            float i4 = mix(g, h, f.x);
-            
-            float j1 = mix(i1, i2, f.y);
-            float j2 = mix(i3, i4, f.y);
-            
-            return mix(j1, j2, f.z);
-          }
-          
-          // Función de ruido fractal (fBm)
-          float fbm(vec3 p, int octaves) {
-            float value = 0.0;
-            float amplitude = 0.5;
-            float frequency = 1.0;
-            
-            for (int i = 0; i < octaves; i++) {
-              value += amplitude * smoothNoise(p * frequency);
-              frequency *= 2.0;
-              amplitude *= 0.5;
-            }
-            
-            return value;
-          }
-          
-          void main() {
-            vec3 pos = normalize(vWorldPosition);
-            
-            // Añadir rotación basada en el tiempo
-            float angle = time * 0.1;
-            float c = cos(angle);
-            float s = sin(angle);
-            vec2 rotPos = vec2(
-              pos.x * c - pos.z * s,
-              pos.x * s + pos.z * c
-            );
-            
-            // Generar patrones de ruido
-            vec3 p = vec3(pos.xy * 2.0, time * 0.1);
-            float n1 = fbm(p, 4);
-            float n2 = fbm(p * 2.0, 4);
-            
-            // Mezclar colores basados en la posición y el ruido
-            float h = smoothstep(-0.5, 0.5, pos.y + n1 * 0.5);
-            vec3 color = mix(color1, color2, h);
-            
-            // Añadir detalles con otro ruido
-            float details = smoothstep(0.3, 0.7, n2);
-            color = mix(color, color3, details * 0.5);
-            
-            // Añadir brillo en los bordes
-            float rim = 1.0 - abs(dot(pos, vec3(0.0, 0.0, 1.0)));
-            color += rim * 0.5 * color3;
-            
-            // Añadir efecto de escaneo vertical
-            float scan = smoothstep(0.4, 0.6, sin(pos.y * 50.0 + time * 2.0) * 0.5 + 0.5);
-            color = mix(color, color * 1.5, scan * 0.3);
-            
-            gl_FragColor = vec4(color, 1.0);
-          }
-        `}
-      />
-    </mesh>
-  );
-};
-
 // Componente principal de carga mejorado
 const LoadingScreen: React.FC = () => {
   const { t } = useLanguage();
@@ -400,9 +252,25 @@ const LoadingScreen: React.FC = () => {
   }, [t]); // Añadido t como dependencia
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-hidden">
-      <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+    <div className="fixed inset-0 overflow-hidden bg-black">
+      <Canvas 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: -1
+        }}
+        camera={{ position: [0, 0, 1], fov: 75, near: 0.1, far: 10 }}
+      >
         <EtherealSky />
+      </Canvas>
+      <div className="absolute inset-0">
+        <Canvas 
+          camera={{ position: [0, 0, 20], fov: 60, near: 0.1, far: 1000 }}
+          style={{ background: 'transparent' }}
+        >
         <FloatingParticles count={3000} />
         <ConcentricRings count={8} />
         
@@ -424,7 +292,8 @@ const LoadingScreen: React.FC = () => {
           <sphereGeometry args={[1, 32, 32]} />
           <meshBasicMaterial color="#00ff88" transparent opacity={0.2} />
         </mesh>
-      </Canvas>
+        </Canvas>
+      </div>
       
       {/* Spinner futurista más grande */}
       <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -457,13 +326,13 @@ const LoadingScreen: React.FC = () => {
       
       {/* Logo y mensaje de carga */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-        <div className="relative flex flex-col items-center transform scale-125 md:scale-150 transition-all duration-500">
+        <div className="relative flex flex-col items-center transform scale-100 md:scale-110 transition-all duration-500">
           <img 
             src={MAIN_LOGO_URL} 
             alt={t('petgasLoadingLogoAlt')} 
-            className="h-28 md:h-36 mb-8 opacity-90 transition-all duration-1000"
+            className="h-20 md:h-28 mb-6 opacity-90 transition-all duration-1000"
             style={{
-              filter: 'drop-shadow(0 0 20px rgba(136, 255, 136, 1))',
+              filter: 'drop-shadow(0 0 15px rgba(136, 255, 136, 0.8))',
               transform: `scale(${1 + Math.sin(progress * 0.1) * 0.05})`
             }}
           />

@@ -21,10 +21,10 @@ export const translations: Record<Language, Record<string, any>> = {
     plantImageAltSuffix: 'imagen de planta',
     petgasMainLogoAlt: 'Logo Principal de Petgas',
     
-    // Plant Card Display Names
-    p90_card_display_name: 'P-90 Plant',
-    petgas_4k_card_display_name: '4K Double Reactor Plant',
-    petgas_700kg_card_display_name: '700kg Double Reactor Plant',
+    // Plant Card Display Names - Spanish
+    p90_card_display_name: 'Planta P-90',
+    petgas_4k_card_display_name: 'PETGAS 4K Dual Reactor',
+    petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
 
     // Plant View
     plantSpecificLogoAlt: 'Logo específico de la planta',
@@ -281,6 +281,11 @@ export const translations: Record<Language, Record<string, any>> = {
     heroSelectPrompt: 'Select a plant to dive into its unique technical specifications and benefits.',
     plantImageAltSuffix: 'plant image',
     petgasMainLogoAlt: 'Petgas Main Logo',
+
+    // Plant Card Display Names - English
+    p90_card_display_name: 'P-90 Plant',
+    petgas_4k_card_display_name: 'PETGAS 4K Dual Reactor',
+    petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
 
     // Plant View
     plantSpecificLogoAlt: 'Plant specific logo',

@@ -1,328 +1,527 @@
-import { Suspense, useRef, useEffect, useState, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-// Componente de partículas flotantes
-const FloatingParticles = ({ count = 2000 }) => {
-  const particles = useRef<THREE.Points>(null);
+// Función para crear material wireframe
+const createWireframeMaterial = (color: number, opacity: number) => {
+  return new THREE.MeshBasicMaterial({
+    color: color,
+    wireframe: true,
+    transparent: true,
+    opacity: opacity,
+  });
+};
+
+// Componente para el fondo etéreo
+const GradientBackground = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const shaderRef = useRef<THREE.ShaderMaterial>(null);
   
-  // Crear geometría de partículas
-  const particlesGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(count * 3);
-    
-    for (let i = 0; i < count * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 50;
-      positions[i + 1] = (Math.random() - 0.5) * 50;
-      positions[i + 2] = (Math.random() - 0.5) * 50;
-    }
-    
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    return geometry;
-  }, [count]);
-  
-  // Animar partículas
-  useFrame((state) => {
-    if (particles.current) {
-      particles.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-      particles.current.rotation.x = state.clock.getElapsedTime() * 0.02;
+  useFrame(({ clock }) => {
+    if (shaderRef.current) {
+      shaderRef.current.uniforms.time.value = clock.getElapsedTime() * 0.1;
     }
   });
 
   return (
-    <points ref={particles}>
-      <bufferGeometry attach="geometry" {...particlesGeometry} />
-      <pointsMaterial 
-        size={0.1} 
-        color="#00ffff"
-        transparent 
-        opacity={0.6}
-        sizeAttenuation={true}
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[100, 64, 64]} />
+      <shaderMaterial
+        ref={shaderRef}
+        side={THREE.BackSide}
+        uniforms={{
+          time: { value: 0 },
+          color1: { value: new THREE.Color(0x003300) }, // Verde muy oscuro
+          color2: { value: new THREE.Color(0x006633) }, // Verde bosque
+          color3: { value: new THREE.Color(0x00aa77) }, // Verde agua
+          fogColor: { value: new THREE.Color(0x001a0a) },
+          fogDensity: { value: 0.15 }
+        }}
+        vertexShader={`
+          varying vec3 vWorldPosition;
+          varying vec2 vUv;
+          
+          void main() {
+            vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPosition.xyz;
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `}
+        fragmentShader={`
+          uniform vec3 color1;
+          uniform vec3 color2;
+          uniform vec3 color3;
+          uniform vec3 fogColor;
+          uniform float fogDensity;
+          uniform float time;
+          
+          varying vec3 vWorldPosition;
+          varying vec2 vUv;
+          
+          // Función de ruido simplex
+          vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+          vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+          vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+          vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+          float snoise(vec3 v) { 
+            const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+            const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+            
+            vec3 i  = floor(v + dot(v, C.yyy));
+            vec3 x0 = v - i + dot(i, C.xxx);
+            
+            vec3 g = step(x0.yzx, x0.xyz);
+            vec3 l = 1.0 - g;
+            vec3 i1 = min(g.xyz, l.zxy);
+            vec3 i2 = max(g.xyz, l.zxy);
+            
+            vec3 x1 = x0 - i1 + C.xxx;
+            vec3 x2 = x0 - i2 + C.yyy;
+            vec3 x3 = x0 - D.yyy;
+            
+            i = mod289(i);
+            vec4 p = permute(permute(permute(
+                     i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                   + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                   + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+            
+            float n_ = 0.142857142857;
+            vec3  ns = n_ * D.wyz - D.xzx;
+            
+            vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+            
+            vec4 x_ = floor(j * ns.z);
+            vec4 y_ = floor(j - 7.0 * x_);
+            
+            vec4 x = x_ * ns.x + ns.yyyy;
+            vec4 y = y_ * ns.x + ns.yyyy;
+            vec4 h = 1.0 - abs(x) - abs(y);
+            
+            vec4 b0 = vec4(x.xy, y.xy);
+            vec4 b1 = vec4(x.zw, y.zw);
+            
+            vec4 s0 = floor(b0) * 2.0 + 1.0;
+            vec4 s1 = floor(b1) * 2.0 + 1.0;
+            vec4 sh = -step(h, vec4(0.0));
+            
+            vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+            vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+            
+            vec3 p0 = vec3(a0.xy, h.x);
+            vec3 p1 = vec3(a0.zw, h.y);
+            vec3 p2 = vec3(a1.xy, h.z);
+            vec3 p3 = vec3(a1.zw, h.w);
+            
+            vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
+            p0 *= norm.x;
+            p1 *= norm.y;
+            p2 *= norm.z;
+            p3 *= norm.w;
+            
+            vec4 m = max(0.6 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
+            m = m * m;
+            
+            return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
+          }
+          
+          void main() {
+            // Coordenadas normalizadas
+            vec3 pos = normalize(vWorldPosition);
+            
+            // Generar patrones de ruido
+            float n1 = snoise(pos * 2.0 + time * 0.1);
+            float n2 = snoise(pos * 4.0 + time * 0.2);
+            float n3 = snoise(pos * 8.0 + time * 0.1);
+            
+            // Mezclar colores basados en la posición y el ruido
+            float h = smoothstep(-0.5, 0.5, pos.y + n1 * 0.3);
+            vec3 color = mix(color1, color2, h);
+            color = mix(color, color3, smoothstep(0.3, 1.0, h + n2 * 0.2));
+            
+            // Añadir variación con el tiempo
+            color = mix(color, color * 1.1, 0.5 + 0.5 * sin(time * 0.5 + pos.y * 10.0) * n3);
+            
+            // Añadir neblina basada en la distancia
+            float fogFactor = 1.0 - exp(-fogDensity * length(vWorldPosition));
+            color = mix(color, fogColor, fogFactor);
+            
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `}
+      />
+    </mesh>
+  );
+};
+
+// Componente de partículas flotantes
+const FloatingParticles: React.FC<{ count: number }> = ({ count }) => {
+  const particles = useMemo(() => {
+    const positions = [];
+    for (let i = 0; i < count; i++) {
+      positions.push(
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 20
+      );
+    }
+    return new Float32Array(positions);
+  }, [count]);
+
+  const ref = useRef<THREE.Points>(null);
+  
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.rotation.y += 0.001;
+      ref.current.rotation.x += 0.0005;
+    }
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[particles, 3]}
+          count={particles.length / 3}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.1}
+        color="#00aaff"
+        transparent
+        opacity={0.8}
+        sizeAttenuation
       />
     </points>
   );
 };
 
-// Shader para el efecto de wireframe con gradiente animado
-const TechnicalWireframeShader = {
-  uniforms: {
-    time: { value: 0 },
-    lineColor1: { value: new THREE.Color(0x00ff88) },  // Verde esmeralda
-    lineColor2: { value: new THREE.Color(0xffff00) },  // Amarillo brillante
-    bgColor: { value: new THREE.Color(0x001a0f) },     // Verde oscuro
-    opacity: { value: 1.0 },
-    gradientSpeed: { value: 0.5 },
-    pulseSpeed: { value: 0.8 }
-  },
-  vertexShader: `
-    varying vec3 vNormal;
-    varying vec3 vPosition;
-    varying vec3 vWorldPosition;
-    
-    void main() {
-      vNormal = normalize(normalMatrix * normal);
-      vPosition = position;
-      vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-      vWorldPosition = worldPosition.xyz;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform float time;
-    uniform vec3 lineColor1;  // Verde
-    uniform vec3 lineColor2;  // Amarillo
-    uniform vec3 bgColor;     // Fondo oscuro
-    uniform float opacity;
-    uniform float gradientSpeed;
-    uniform float pulseSpeed;
-    varying vec3 vNormal;
-    varying vec3 vPosition;
-    varying vec3 vWorldPosition;
-    
-    // Función para crear un patrón de líneas de cuadrícula
-    float grid(vec2 st, float res) {
-      vec2 grid = fract(st);
-      float line = min(step(res, grid.x), step(res, grid.y));
-      return 1.0 - line;
-    }
-    
-    // Función para mezclar colores con ruido
-    vec3 gradientColor(float t) {
-      // Añadir ruido suave al gradiente
-      float noise = 0.5 + 0.5 * sin(vWorldPosition.y * 5.0 + time * 0.5);
-      t = clamp(t + noise * 0.1, 0.0, 1.0);
-      
-      // Crear gradiente entre los dos colores
-      return mix(lineColor1, lineColor2, smoothstep(0.0, 1.0, t));
-    }
-    
-    void main() {
-      // Coordenadas UV basadas en la posición del mundo
-      vec2 uv = vWorldPosition.xz * 0.5;
-      
-      // Crear patrón de cuadrícula
-      float gridPattern = grid(uv, 0.1);
-      
-      // Efecto de pulso para la animación
-      float pulse = 0.7 + 0.3 * sin(time * pulseSpeed);
-      
-      // Crear gradiente vertical animado
-      float gradient = 0.5 + 0.5 * sin(time * gradientSpeed + vWorldPosition.y * 2.0);
-      
-      // Color de línea con gradiente animado
-      vec3 lineColor = gradientColor(gradient);
-      
-      // Aplicar brillo a las líneas
-      lineColor = mix(lineColor, vec3(1.0), 0.3 * pulse);
-      
-      // Color base (fondo oscuro)
-      vec3 color = bgColor;
-      
-      // Aplicar color de línea con efecto de pulso
-      color = mix(color, lineColor, gridPattern * pulse);
-      
-      // Resaltar bordes con brillo
-      float edge = smoothstep(0.7, 1.0, abs(dot(vNormal, vec3(0.0, 1.0, 0.0))));
-      color = mix(color, vec3(1.0, 1.0, 0.8), edge * 0.8);
-      
-      gl_FragColor = vec4(color, opacity);
-    }
-  `,
-  wireframe: false,
-  transparent: true,
-  side: THREE.DoubleSide
-};
-
-// Props del componente Model
-interface ModelProps {
-  scanProgress: number; // 0 a 1 para la transición
-}
-
-// Componente de cámara con zoom al 450%
-const IndustrialCamera = () => {
-  // Posición más cercana para simular zoom al 450% con mejor ángulo
-  return <PerspectiveCamera 
-    makeDefault 
-    fov={15} 
-    position={[0, 0.5, 1.8]} // Ajuste para compensar la altura del modelo
-    rotation={[0, 0, 0]} 
-  />;
-};
-
-// Props del componente Model
-interface ModelProps {
-  scanProgress: number; // 0 a 1 para la transición
-}
-
-// Componente del modelo 3D
-const Model: React.FC<ModelProps> = ({ scanProgress }) => {
+// Componente para cargar modelos OBJ
+const OBJModel: React.FC<{ modelPath: string; material: THREE.Material }> = ({ modelPath, material }) => {
   const [model, setModel] = useState<THREE.Group | null>(null);
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<THREE.Group>(new THREE.Group());
   
-  // Crear material con shader personalizado
-  const material = useMemo(() => {
-    const mat = new THREE.ShaderMaterial({
-      ...TechnicalWireframeShader,
-      wireframe: true,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-    
-    // Configurar valores iniciales de los uniformes
-    mat.uniforms.lineColor1.value = new THREE.Color(0x00ff88);  // Verde esmeralda
-    mat.uniforms.lineColor2.value = new THREE.Color(0xffff00);  // Amarillo brillante
-    mat.uniforms.bgColor.value = new THREE.Color(0x001a0f);     // Verde oscuro
-    mat.uniforms.opacity.value = 1.0;
-    mat.uniforms.gradientSpeed.value = 0.3;  // Velocidad del gradiente
-    mat.uniforms.pulseSpeed.value = 0.8;     // Velocidad del pulso
-    
-    return mat;
-  }, []);
-  
-  // Actualizar el material basado en el progreso del escaneo
   useEffect(() => {
-    if (materialRef.current) {
-      // Invertir el progreso para que 0 = wireframe, 1 = modelo normal
-      const wireframeAmount = 1.0 - scanProgress;
-      
-      // Actualizar uniformes del shader
-      materialRef.current.uniforms.time.value = performance.now() * 0.001;
-      materialRef.current.uniforms.opacity.value = 1.0;
-      
-      // Interpolar entre wireframe y modelo normal
-      materialRef.current.wireframe = wireframeAmount > 0.5;
-      
-      // Si estamos en modo wireframe, usar el shader personalizado
-      if (wireframeAmount > 0.5) {
-        materialRef.current.wireframeLinewidth = 1.5;
-        materialRef.current.uniforms.lineColor.value.set(0x4d79ff);
-        materialRef.current.uniforms.bgColor.value.set(0x000d33);
+    const loader = new OBJLoader();
+    let isMounted = true;
+    
+    loader.load(
+      modelPath,
+      (object) => {
+        if (!isMounted) return;
+        
+        // Clonar el objeto para evitar problemas de referencia
+        const model = object.clone();
+        
+        // Aplicar el material a todos los hijos del modelo
+        model.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.material = material;
+          }
+        });
+        
+        // Ajustar la escala (450% más grande) y posición
+        model.scale.set(3.0, 3.0, 3.0);
+        model.position.set(0, 0, 0);
+        
+        setModel(model);
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading OBJ model:', error);
+      }
+    );
+    
+    return () => {
+      isMounted = false;
+      if (model) {
+        model.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.geometry.dispose();
+            if (Array.isArray(child.material)) {
+              child.material.forEach(m => m.dispose());
+            } else {
+              child.material.dispose();
+            }
+          }
+        });
+      }
+    };
+  }, [modelPath, material]);
+  
+  // Actualizar el grupo cuando el modelo cambie
+  useEffect(() => {
+    if (model && groupRef.current) {
+      // Limpiar el grupo actual
+      while (groupRef.current.children.length > 0) {
+        groupRef.current.remove(groupRef.current.children[0]);
       }
       
-      materialRef.current.needsUpdate = true;
+      // Agregar el nuevo modelo
+      groupRef.current.add(model);
     }
-  }, [scanProgress]);
+  }, [model]);
   
-  // Cargar modelo OBJ
+  return <primitive object={groupRef.current} />;
+};
+
+// Componente para cargar modelos GLTF/GLB
+const GLTFModel: React.FC<{ modelPath: string; material: THREE.Material }> = ({ modelPath, material }) => {
+  const groupRef = useRef<THREE.Group>(new THREE.Group());
+  
   useEffect(() => {
-    if (!model) {
-      const loader = new OBJLoader();
-      let mounted = true;
-      
-      const loadModel = async () => {
-        try {
-          // Cargar el modelo OBJ desde la ruta correcta
-          const obj = await loader.loadAsync('/images/Industrial_Blueprint_0605180610_generate.obj');
+    const loader = new GLTFLoader();
+    let isMounted = true;
+    
+    loader.load(
+      modelPath,
+      (gltf) => {
+        if (!isMounted || !groupRef.current) return;
+        
+        // Limpiar el grupo actual
+        while (groupRef.current.children.length > 0) {
+          const child = groupRef.current.children[0];
+          groupRef.current.remove(child);
           
-          if (!mounted) return;
-          
-          // Clonar el modelo para evitar problemas de referencia
-          const modelGroup = obj.clone();
-          
-          // Ajustar escala y posición
-          const box = new THREE.Box3().setFromObject(modelGroup);
-          const size = box.getSize(new THREE.Vector3());
-          const center = box.getCenter(new THREE.Vector3());
-          const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 1.5 / maxDim; // Ajuste de escala más pequeño para mejor visualización
-          
-          // Aplicar transformaciones
-          modelGroup.scale.set(scale, scale, scale);
-          
-          // Posicionar el modelo centrado en el origen
-          modelGroup.position.x = -center.x * scale - 0.2; // Pequeño ajuste a la izquierda
-          modelGroup.position.y = -center.y * scale + 0.3; // Pequeño ajuste hacia arriba
-          modelGroup.position.z = -center.z * scale;
-          
-          // Aplicar material a todos los hijos del modelo
-          modelGroup.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-              child.material = material;
+          // Limpiar recursos del hijo
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(m => m.dispose?.());
+            } else {
+              mesh.material?.dispose?.();
             }
-          });
+            mesh.geometry?.dispose();
+          }
+        }
+        
+        // Clonar la escena para evitar problemas de referencia
+        const model = gltf.scene.clone();
+        
+        // Aplicar material a todo el modelo
+        model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            mesh.material = material;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+          }
+        });
+        
+        // Ajustar la escala y posición
+        model.scale.set(1.5, 1.5, 1.5);
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
+        
+        // Agregar el modelo al grupo
+        groupRef.current.add(model);
+      },
+      undefined,
+      (error) => {
+        console.error('Error al cargar el modelo GLTF:', error);
+      }
+    );
+    
+    return () => {
+      isMounted = false;
+      
+      // Limpiar recursos al desmontar
+      if (groupRef.current) {
+        while (groupRef.current.children.length > 0) {
+          const child = groupRef.current.children[0];
+          groupRef.current.remove(child);
           
-          setModel(modelGroup);
-        } catch (error) {
-          console.error('Error al cargar el modelo:', error);
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(m => m.dispose?.());
+            } else {
+              mesh.material?.dispose?.();
+            }
+            mesh.geometry?.dispose();
+          }
         }
-      };
-      
-      loadModel();
-      
-      return () => {
-        mounted = false;
-        if (model) {
-          const scene = new THREE.Scene();
-          scene.remove(model);
-        }
-      };
+      }
+    };
+  }, [modelPath, material]);
+  
+  return <primitive object={groupRef.current} />;
+};
+
+// Componente principal para el modelo 3D con rotación suave
+const Model: React.FC = () => {
+  const [showWireframe, setShowWireframe] = useState(false);
+  const modelRef = useRef<THREE.Group>(null);
+  
+  // Material para el modelo industrial
+  const standardMaterial = useMemo(() => new THREE.MeshStandardMaterial({
+    color: 0x00aaff,
+    metalness: 0.7,
+    roughness: 0.3,
+    emissive: 0x003366,
+    emissiveIntensity: 0.2,
+    transparent: true,
+    opacity: 0.95,
+  }), []);
+  
+  // Material para el wireframe
+  const wireframeMaterial = useMemo(() => 
+    createWireframeMaterial(0x00aaff, 0.8)
+  , []);
+  
+  // Alternar entre modelos cada 5 segundos
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShowWireframe(prev => !prev);
+    }, 5000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  // Animación de rotación suave
+  useFrame((_, delta) => {
+    if (modelRef.current) {
+      modelRef.current.rotation.y += delta * 0.5; // Rotación suave
     }
-  }, [model, material]);
+  });
   
-  if (!model) return null;
-  
-  return <primitive ref={groupRef} object={model} />;
+  return (
+    <group ref={modelRef}>
+      <group scale={[4, 4, 4]} position={[0, 0, 0]}>
+        <Suspense fallback={null}>
+          {showWireframe ? (
+            <GLTFModel
+              modelPath="/images/planta4k.glb"
+              material={wireframeMaterial}
+            />
+          ) : (
+            <OBJModel
+              modelPath="/images/Industrial_Blueprint_0605180610_generate.obj"
+              material={standardMaterial}
+            />
+          )}
+        </Suspense>
+      </group>
+    </group>
+  );
 };
 
 // Componente de animación que se ejecuta dentro del Canvas
 const AnimationController = ({ onUpdate }: { onUpdate: (progress: number) => void }) => {
-  const forward = useRef(true);
-  const progress = useRef(0);
-  // Velocidad de la animación (más lenta para mejor efecto)
-  const speed = 0.15;
+  const [progress, setProgress] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const animationRef = useRef<number>(0);
+  const lastTime = useRef<number>(0);
+  const animationSpeed = 0.3; // Velocidad de la animación (más bajo = más lento)
   
-  useFrame(() => {
-    // Calcular el siguiente valor basado en la dirección
-    const nextValue = forward.current 
-      ? progress.current + (speed * 0.01) 
-      : progress.current - (speed * 0.01);
+  // Efecto para manejar la animación
+  useEffect(() => {
+    let isMounted = true;
     
-    // Cambiar dirección si llegamos a los extremos
-    if (nextValue >= 1.0) {
-      forward.current = false;
-      progress.current = 1.0;
-    } else if (nextValue <= 0) {
-      forward.current = true;
-      progress.current = 0;
-    } else {
-      progress.current = nextValue;
-    }
+    const animate = (time: number) => {
+      if (!isMounted) return;
+      
+      if (!lastTime.current) lastTime.current = time;
+      const delta = (time - lastTime.current) / 1000; // Delta en segundos
+      lastTime.current = time;
+      
+      setProgress(prevProgress => {
+        let newProgress = prevProgress + (delta * animationSpeed * direction);
+        
+        // Invertir la dirección al llegar a los límites
+        if (newProgress >= 1) {
+          newProgress = 1;
+          setDirection(-1);
+        } else if (newProgress <= 0) {
+          newProgress = 0;
+          setDirection(1);
+        }
+        
+        return newProgress;
+      });
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
     
-    // Notificar el cambio
-    onUpdate(progress.current);
-  });
+    animationRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      isMounted = false;
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [direction]);
+  
+  // Notificar los cambios de progreso
+  useEffect(() => {
+    onUpdate(progress);
+  }, [progress, onUpdate]);
   
   return null;
 };
 
-// Componente principal
-export default function Plant3DAnimation() {
-  const [scanProgress, setScanProgress] = useState(0);
-
+// Componente principal del visor 3D
+const Plant3DAnimation: React.FC = () => {
   return (
-    <div className="w-full h-[600px] bg-gray-900 rounded-xl overflow-hidden">
-      <Canvas>
+    <div className="relative w-full h-full">
+      <Canvas shadows camera={{ position: [0, 5, 15], fov: 45, near: 0.1, far: 500 }}>
+        <color attach="background" args={['#001a0a']} />
+        <fog attach="fog" args={['#001a0a', 10, 150]} />
+        <GradientBackground />
+        
+        {/* Luces principales */}
+        <ambientLight intensity={0.3} color="#ffffff" />
+        <directionalLight
+          position={[10, 20, 10]}
+          intensity={1.2}
+          color="#ffffff"
+          castShadow
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+          shadow-camera-near={0.5}
+          shadow-camera-far={500}
+        />
+        <hemisphereLight
+          args={[0x88ccff, 0x002200, 0.5]}
+          position={[0, 20, 0]}
+        />
+        <pointLight
+          position={[0, 15, 10]}
+          intensity={0.5}
+          color="#88ccff"
+          distance={50}
+          decay={1.5}
+        />
+        
         <Suspense fallback={null}>
-          <IndustrialCamera />
-          <FloatingParticles count={1000} />
-          <Model scanProgress={scanProgress} />
-          <AnimationController onUpdate={setScanProgress} />
-          <OrbitControls 
-            enableZoom={true}
-            enablePan={true}
-            enableRotate={true}
-            minDistance={3}
-            maxDistance={10}
-            autoRotate
-            autoRotateSpeed={0.5}
-          />
-          <Environment preset="city" />
-          <axesHelper args={[20]} position={[0, 0.1, 0]} />
+          <Model />
         </Suspense>
+        
+        <OrbitControls 
+          enableZoom={true} 
+          enablePan={true} 
+          enableRotate={true}
+          maxPolarAngle={Math.PI / 1.5}
+          minPolarAngle={Math.PI / 3}
+          maxDistance={20}
+          minDistance={5}
+          zoomSpeed={0.5}
+        />
+        
+        {/* Grid helper para referencia */}
+        <gridHelper args={[20, 20, 0x444444, 0x222222]} />
+        
+        {/* Efecto de partículas flotantes */}
+        <FloatingParticles count={200} />
       </Canvas>
     </div>
   );
 };
+
+export default Plant3DAnimation;

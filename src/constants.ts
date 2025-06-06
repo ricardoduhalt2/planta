@@ -9,7 +9,7 @@ const P90_DATA: PlantData = {
   shortName: 'P-90', // Stays as is, used for button text, not directly translated unless necessary
   fullName: 'PETGAS P-90', // Used in titles, could be a key if plant names need translation
   cardDisplayNameKey: 'p90_card_display_name',
-  title: 'Ficha Técnica Planta PETGAS P-90', // Main page title, could be constructed if "Ficha Técnica" needs i18n
+  title: 'Ficha Técnica Planta P-90', // Main page title, could be constructed if "Ficha Técnica" needs i18n
   logoUrl: NAVBAR_LOGO_URL,
   mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2025/06/p01.jpeg', // Updated P-90 image
   generalities: [
@@ -114,9 +114,9 @@ const P90_DATA: PlantData = {
 const PETGAS_4K_DATA: PlantData = {
   id: 'petgas-4k',
   shortName: '4K DR', // Shortened for navbar
-  fullName: 'PETGAS 4K Doble Reactor',
+  fullName: 'PETGAS 4K Dual Reactor',
   cardDisplayNameKey: 'petgas_4k_card_display_name',
-  title: 'Ficha Técnica Planta PETGAS 4K Doble Reactor',
+  title: 'Ficha Técnica Planta PETGAS 4K Dual Reactor',
   logoUrl: NAVBAR_LOGO_URL,
   mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2024/09/planta4k.jpg', // Updated 4K image
   generalities: [
@@ -212,9 +212,9 @@ const PETGAS_4K_DATA: PlantData = {
 const PETGAS_700KG_DATA: PlantData = {
   id: 'petgas-700kg',
   shortName: '700kg DR', // Shortened
-  fullName: 'PETGAS 700kg Doble Reactor',
+  fullName: 'PETGAS 700kg Dual Reactor',
   cardDisplayNameKey: 'petgas_700kg_card_display_name',
-  title: 'Ficha Técnica Planta PETGAS 700 kg',
+  title: 'Ficha Técnica Planta PETGAS 700kg Dual Reactor',
   logoUrl: NAVBAR_LOGO_URL,
   mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg1.jpg', // Updated 700kg image
   generalities: [

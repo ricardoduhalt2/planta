@@ -360,7 +360,22 @@ const LoadingScreen: React.FC = () => {
   const { t } = useLanguage();
   const [progress, setProgress] = useState(0);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [terminalText, setTerminalText] = useState('');
+  const fullText = 'CARGANDO PRESENTACIÓN DE PETGAS';
+  const [currentIndex, setCurrentIndex] = useState(0);
   
+  // Efecto para la animación de texto tipo terminal
+  useEffect(() => {
+    if (currentIndex < fullText.length) {
+      const timeout = setTimeout(() => {
+        setTerminalText(prev => prev + fullText[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, Math.random() * 100 + 50);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex]);
+
   // Efecto para la barra de progreso
   useEffect(() => {
     const interval = setInterval(() => {
@@ -465,10 +480,23 @@ const LoadingScreen: React.FC = () => {
             {t('loading')}
           </h2>
           
-          {/* Texto de carga */}
-          <p className="text-white text-lg opacity-90">
-            {t('loading').toUpperCase()}
-          </p>
+          {/* Texto de carga tipo terminal */}
+          <div className="mt-6 font-mono text-green-400 text-sm md:text-base bg-black bg-opacity-50 px-4 py-2 rounded-md">
+            <div className="flex items-start">
+              <span className="text-green-500 mr-2">$</span>
+              <div>
+                <div className="inline-block">
+                  <span>{terminalText}</span>
+                  <span className="animate-pulse">_</span>
+                </div>
+                {currentIndex >= fullText.length && (
+                  <div className="text-green-300 mt-1">
+                    {t('loading').toUpperCase()}...
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       

@@ -9,7 +9,7 @@ const P90_DATA: PlantData = {
   shortName: 'P-90', // Stays as is, used for button text, not directly translated unless necessary
   fullName: 'PETGAS P-90', // Used in titles, could be a key if plant names need translation
   cardDisplayNameKey: 'p90_card_display_name',
-  title: 'Ficha Técnica Planta P-90', // Main page title, could be constructed if "Ficha Técnica" needs i18n
+  titleKey: 'p90_title', // Translation key for the title
   logoUrl: NAVBAR_LOGO_URL,
   mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2025/06/p01.jpeg', // Updated P-90 image
   generalities: [
@@ -113,12 +113,12 @@ const P90_DATA: PlantData = {
 
 const PETGAS_4K_DATA: PlantData = {
   id: 'petgas-4k',
-  shortName: '4K DR', // Shortened for navbar
-  fullName: 'PETGAS 4K Dual Reactor',
+  shortName: '4K - 1R', // Shortened for navbar
+  fullName: 'PETGAS 4K -1R (Dual Reactor Opcional)',
   cardDisplayNameKey: 'petgas_4k_card_display_name',
-  title: 'Ficha Técnica Planta PETGAS 4K Dual Reactor',
+  titleKey: 'petgas_4k_title', // Translation key for the title
   logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2024/09/planta4k.jpg', // Updated 4K image
+  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg3.jpg', // Updated 4K-1R plant image
   generalities: [
     { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'petgas_4k_process_content' },
     { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'petgas_4k_energy_self_sufficiency_content' },
@@ -209,94 +209,8 @@ const PETGAS_4K_DATA: PlantData = {
   priceInfoKey: 'petgas_4k_price_info',
 };
 
-const PETGAS_700KG_DATA: PlantData = {
-  id: 'petgas-700kg',
-  shortName: '700kg DR', // Shortened
-  fullName: 'PETGAS 700kg Dual Reactor',
-  cardDisplayNameKey: 'petgas_700kg_card_display_name',
-  title: 'Ficha Técnica Planta PETGAS 700kg Dual Reactor',
-  logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg1.jpg', // Updated 700kg image
-  generalities: [
-    { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'petgas_700kg_process_content' },
-    { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'petgas_700kg_energy_self_sufficiency_content' },
-    { id: 'g3', titleKey: CommonText.REACTOR_PROCESS_TIME_TITLE, contentKey: 'petgas_700kg_reactor_process_time_content' },
-    { id: 'g4', titleKey: CommonText.SUITABLE_PLASTICS_TITLE, contentKey: 'petgas_700kg_suitable_plastics_content' },
-  ],
-   benefits: [ // Using same benefit keys
-    { id: 'b1', title: 'benefit_training_title', description: 'benefit_training_desc', details: ['benefit_training_detail1', 'benefit_training_detail2'] },
-    { id: 'b2', title: 'benefit_installation_title', description: 'benefit_installation_desc' },
-    { id: 'b3', title: 'benefit_quality_title', description: 'benefit_quality_desc' },
-    { id: 'b4', title: 'benefit_safety_title', description: 'benefit_safety_desc' },
-    { id: 'b5', title: 'benefit_support_title', description: 'benefit_support_desc' },
-  ],
-  generalDescriptionKey: 'petgas_700kg_general_desc',
-  transformationSystem: {
-    titleKey: 'common_transformation_system_title',
-    components: [
-      { id: 'ts1', name: CommonText.REACTOR_SYSTEM_COMPONENT_NAME, description: ['petgas_700kg_reactor_comp_desc1', 'petgas_700kg_reactor_comp_desc2', 'petgas_700kg_reactor_comp_desc3', 'petgas_700kg_reactor_comp_desc4'] },
-      { id: 'ts2', name: CommonText.CONDENSERS_COMPONENT_NAME, description: 'petgas_700kg_condensers_comp_desc' },
-      { id: 'ts3', name: CommonText.PROCESS_TANKS_COMPONENT_NAME, description: ['petgas_700kg_tanks_comp_desc1', 'petgas_700kg_tanks_comp_desc2'] },
-      { id: 'ts4', name: CommonText.COOLING_SYSTEM_COMPONENT_NAME, description: 'petgas_700kg_cooling_comp_desc' },
-      { id: 'ts5', name: CommonText.PUMP_SYSTEMS_COMPONENT_NAME, description: 'petgas_700kg_pumps_comp_desc' },
-      { id: 'ts6', name: CommonText.GAS_FEED_SYSTEM_COMPONENT_NAME, description: 'petgas_700kg_gasfeed_comp_desc' },
-    ]
-  },
-  technicalSpecs: [
-    { key: 'tech_spec_capacity_dual', value: '700 kg por ciclo\n1400 kg (doble reactor)' },
-    { key: 'tech_spec_process_duration', value: '6 - 8 horas por ciclo' },
-    { key: 'tech_spec_operators', value: '3 operadores por ciclo' },
-    { key: 'tech_spec_burners', value: '1 quemador Marca PETGAS' },
-    { key: 'tech_spec_reactor_type_dual', value: '1 reactor forrado en acero inoxidable (Configuración Doble Reactor)' },
-    { key: 'tech_spec_gasoline_prod_dual', value: '315 litros\n630 litros (doble reactor)' },
-    { key: 'tech_spec_diesel_prod_dual', value: '175 litros\n350 litros (doble reactor)' },
-    { key: 'tech_spec_kerosene_prod_dual', value: '70 litros\n140 litros (doble reactor)' },
-    { key: 'tech_spec_paraffin_prod_dual', value: '17.5 kilogramos\n35 kg (doble reactor)' },
-    { key: 'tech_spec_coke_prod_dual', value: '24.5 kilogramos\n49 kg (doble reactor)' },
-  ],
-   powerAndEnergy: [
-    { key: 'tech_spec_lp_gas_consumption', value: '15 Litros por hora. Consumo de gas LP entre 1 y 2 horas por encendido.' },
-    { key: 'tech_spec_energy', value: '48 000 BTU (enfriador, bomba, tablero, sensores)' },
-    { key: 'tech_spec_power', value: '5 kW' },
-  ],
-  maintenance: [
-    'petgas_700kg_maintenance_item1',
-    'petgas_700kg_maintenance_item2',
-    'petgas_700kg_maintenance_item3',
-  ],
-  consumables: [
-     { key: 'consumable_gaskets', value: 'consumable_gaskets_recommendation_700kg'}
-  ],
-  operationalRequirements: [
-    { key: 'op_req_space', value: '500 a 550 m²' },
-    { key: 'op_req_water', value: '1 200 Litros' },
-    { key: 'op_req_piping', value: 'to_be_defined_value' },
-    { key: 'op_req_wiring', value: 'to_be_defined_value' },
-    { key: 'op_req_gas_tank', value: 'op_req_gas_tank_value_process_start' },
-    { key: 'op_req_gasoline_storage_1week_dual', value: 'Recomendación 2 800 litros\nRecomendación 6 000 litros (doble reactor)' },
-    { key: 'op_req_diesel_storage_1week_dual', value: 'Recomendación 1 600 litros\nRecomendación 3 100 litros (doble reactor)' },
-    { key: 'op_req_kerosene_storage_1week_dual', value: 'Recomendación 650 litros\nRecomendación 1 250 litros (doble reactor)' },
-    { key: 'op_req_paraffin_storage', value: 'to_be_defined_value' }, // Assuming this means general "Por definir"
-    { key: 'op_req_coke_storage', value: 'to_be_defined_value_sacks' },
-  ],
-  financialAnalysis: {
-    titleKey: PlantSection.FINANCIAL_ANALYSIS,
-    data: [
-      { concept: 'fin_analysis_monthly_ignitions', specification: '45 encendidos' },
-      { concept: 'fin_analysis_kg_transformed_cycle', specification: '700 kg por ciclo' },
-      { concept: 'fin_analysis_gasoline_monthly', specification: '14,175 litros' },
-      { concept: 'fin_analysis_diesel_monthly', specification: '7,875 litros' },
-      { concept: 'fin_analysis_kerosene_monthly', specification: '3,150 litros' },
-      { concept: 'fin_analysis_paraffin_monthly', specification: '788 kg' },
-      { concept: 'fin_analysis_coke_monthly', specification: '1,105 kg' },
-      { concept: 'fin_analysis_manpower', specification: '3 personas' },
-    ]
-  },
-  priceInfoKey: 'petgas_700kg_price_info',
-};
 
-
-export const ALL_PLANTS_DATA: PlantData[] = [P90_DATA, PETGAS_4K_DATA, PETGAS_700KG_DATA];
+export const ALL_PLANTS_DATA: PlantData[] = [P90_DATA, PETGAS_4K_DATA];
 
 // Base Colors (ensure these are used consistently, Tailwind JIT can use them in bg-[#...])
 export const PETGAS_GREEN = '#009A44';

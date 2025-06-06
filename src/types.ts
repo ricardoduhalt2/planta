@@ -34,7 +34,7 @@ export interface PlantData {
   id: string;
   shortName: string; // For tabs/buttons e.g. "P-90"
   fullName: string; // e.g., "PETGAS P-90" (can be a translation key if needed, or used to derive one)
-  title: string; // e.g., "Ficha Técnica Planta PETGAS P-90" (used as main page title)
+  titleKey: string; // Translation key for the main page title (e.g., "Ficha Técnica Planta PETGAS P-90")
   cardDisplayNameKey: string; // Translation key for the name displayed on hero cards
   logoUrl: string; 
   mainImage: string; 

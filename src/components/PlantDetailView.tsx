@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlantData, KeyValueSpec, ProductionTableEntry, PlantSection, CommonText } from '../types';
-import { PETGAS_GREEN, PETGAS_LIGHT_GREEN, PETGAS_DARK_GREY, PETGAS_WHITE, PETGAS_LIGHT_GREY, PETGAS_MEDIUM_GREY, PETGAS_ACCENT_GREEN, MODERN_BLUE, MODERN_TEAL } from '../constants';
+import { PETGAS_DARK_GREY, PETGAS_LIGHT_GREY, PETGAS_MEDIUM_GREY, MODERN_BLUE, MODERN_TEAL } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import ChartComponent from './ChartComponent';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -226,13 +226,33 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
   return (
     <div className={`container mx-auto p-4 md:p-6 lg:p-8 bg-transparent min-h-screen selection:bg-[#A0D468] selection:text-white`}>
-      <header className="mb-12 text-center py-10 bg-gradient-to-br from-[#009A44] to-[#8CC63F] rounded-2xl shadow-2xl relative overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="animated-logo-background mx-auto mb-5">
-          <img src={plant.logoUrl} alt={t('plantSpecificLogoAlt')} className="h-20 filter drop-shadow-lg"/>
+      <header className="mb-12 text-center py-10 bg-gray-900 rounded-2xl shadow-2xl relative overflow-hidden border-4 border-transparent">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#009A44] via-[#8CC63F] to-[#009A44] bg-[length:200%_auto] animate-gradient"></div>
+        <div className="absolute inset-1 bg-gray-900 rounded-xl"></div>
+        <div className="relative z-10">
+          <div className="animated-logo-background mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full">
+            <img 
+              src={plant.logoUrl} 
+              alt={t('plantSpecificLogoAlt')} 
+              className="h-16 animated-footer-logo"
+            />
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 tracking-tight">{plant.fullName}</h1>
+          <p className="text-xl md:text-2xl text-gray-300 font-light">{t(plant.titleKey)}</p>
         </div>
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 tracking-tight animated-gradient-title">{plant.fullName}</h1>
-        <p className="text-xl md:text-2xl text-white opacity-90 font-light">{plant.title}</p>
+        <style>
+          {`
+            @keyframes gradient {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            .animate-gradient {
+              animation: gradient 3s ease-in-out infinite;
+              background-size: 200% 200%;
+            }
+          `}
+        </style>
       </header>
 
       <div className="mb-12 rounded-2xl overflow-hidden shadow-2xl">
@@ -371,10 +391,40 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
         </AnimatedSectionCard>
       )}
 
-      <AnimatedSectionCard titleKey="priceInfoTitle" bgColor={`bg-gradient-to-tr from-[#009A44] to-[#8CC63F]`} textColor={`text-[#FFFFFF]`} iconType="priceInfoTitle" additionalTitleClassName="title-with-outline">
-        <p className="text-lg md:text-xl whitespace-pre-line font-semibold leading-relaxed drop-shadow-sm">{t(plant.priceInfoKey)}</p>
-        <p className="mt-4 text-sm md:text-base opacity-90">{t('contactPrompt')} <a href="http://www.petgas.com.mx/contacto" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-yellow-300 transition-colors">{t('contactLinkText')}</a>.</p>
-      </AnimatedSectionCard>
+      <div className="relative mb-10 rounded-2xl overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#006030] via-[#007840] to-[#006030] bg-[length:200%_auto] animate-gradient"></div>
+        <div className="relative z-10 p-8">
+          <h2 className="text-3xl font-bold mb-6 pb-3 flex items-center text-white">
+            <SectionIcon type="priceInfoTitle" />
+            {t('priceInfoTitle')}
+          </h2>
+          <p className="text-lg md:text-xl whitespace-pre-line font-semibold leading-relaxed text-gray-100">{t(plant.priceInfoKey)}</p>
+          <p className="mt-4 text-sm md:text-base text-gray-200">
+            {t('contactPrompt')}{' '}
+            <a 
+              href="http://www.petgas.com.mx/contacto" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="font-bold text-yellow-300 hover:text-white transition-colors border-b border-yellow-300 hover:border-white"
+            >
+              {t('contactLinkText')}
+            </a>.
+          </p>
+        </div>
+        <style>
+          {`
+            @keyframes gradient {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            .animate-gradient {
+              animation: gradient 5s ease infinite;
+              background-size: 200% 200%;
+            }
+          `}
+        </style>
+      </div>
 
     </div>
   );

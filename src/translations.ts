@@ -13,8 +13,8 @@ export const translations: Record<Language, Record<string, any>> = {
     switchToSpanish: 'Cambiar a Español', // Though not used when 'es' is active, good for completeness
     
     // Hero Section
-    heroTitle: 'Transformando Plástico en Energía Limpia y Renovable',
-    heroSubtitle: 'Descubra nuestra tecnología de pirólisis de vanguardia que convierte residuos plásticos en combustibles valiosos, impulsando la autosuficiencia energética y un futuro sostenible.',
+    heroTitle: 'Transformando el plástico no reciclable en energía Limpia',
+    heroSubtitle: 'Descubre nuestra tecnología de pirolisis no catalitica que transforma los residuos plásticos en combustibles no fósiles, impulsando la seguridad energética y un futuro para todos.',
     ourPlants: 'Nuestras Plantas Innovadoras',
     viewDetails: 'Explorar Detalles',
     heroSelectPrompt: 'Seleccione una planta para sumergirse en sus especificaciones técnicas y beneficios únicos.',
@@ -23,7 +23,9 @@ export const translations: Record<Language, Record<string, any>> = {
     
     // Plant Card Display Names - Spanish
     p90_card_display_name: 'Planta P-90',
-    petgas_4k_card_display_name: 'PETGAS 4K Dual Reactor',
+    p90_title: 'Ficha Técnica Planta P-90',
+    petgas_4k_card_display_name: 'PETGAS 4K -1R (Dual Reactor Opcional)',
+    petgas_4k_title: 'Ficha Técnica Planta PETGAS 4K -1R (Dual Reactor Opcional)',
     petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
 
     // Plant View
@@ -260,8 +262,8 @@ export const translations: Record<Language, Record<string, any>> = {
     kilograms: "Kilogramos",
     chartGenericAriaLabel: "Gráfico",
     // Footer
-    footerRights: `Petgas Soluciones Energéticas. Todos los derechos reservados.`,
-    footerSlogan: 'Combustibles limpios, poderosos e innovadores.',
+    footerRights: `Petgas. Todos los derechos reservados.`,
+    footerSlogan: 'Energizando el Futuro con Acciones Positivas para el Planeta',
     footerWebsite: 'Visite nuestro sitio web: www.petgas.com.mx',
   },
   en: {
@@ -274,8 +276,8 @@ export const translations: Record<Language, Record<string, any>> = {
     switchToSpanish: 'Switch to Spanish',
 
     // Hero Section
-    heroTitle: 'Transforming Plastic into Clean & Renewable Energy',
-    heroSubtitle: 'Discover our cutting-edge pyrolysis technology that converts plastic waste into valuable fuels, driving energy self-sufficiency and a sustainable future.',
+    heroTitle: 'Transforming Non-Recyclable Plastic into Clean Energy',
+    heroSubtitle: 'Discover our non-catalytic pyrolysis technology that transforms plastic waste into non-fossil fuels, driving energy security and a future for all.',
     ourPlants: 'Our Innovative Plants',
     viewDetails: 'Explore Details',
     heroSelectPrompt: 'Select a plant to dive into its unique technical specifications and benefits.',
@@ -284,7 +286,9 @@ export const translations: Record<Language, Record<string, any>> = {
 
     // Plant Card Display Names - English
     p90_card_display_name: 'P-90 Plant',
-    petgas_4k_card_display_name: 'PETGAS 4K Dual Reactor',
+    p90_title: 'Technical Data Sheet P-90 Plant',
+    petgas_4k_card_display_name: 'PETGAS 4K -1R (Dual Reactor Optional)',
+    petgas_4k_title: 'Technical Data Sheet PETGAS 4K -1R (Dual Reactor Optional)',
     petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
 
     // Plant View
@@ -520,8 +524,8 @@ export const translations: Record<Language, Record<string, any>> = {
     kilograms: "Kilograms",
     chartGenericAriaLabel: "Chart",
     // Footer
-    footerRights: `Petgas Energy Solutions. All rights reserved.`,
-    footerSlogan: 'Clean, powerful, and innovative fuels.',
+    footerRights: `Petgas. All rights reserved.`,
+    footerSlogan: 'Energizing the Future with Positive Actions for the Planet',
     footerWebsite: 'Visit our website: www.petgas.com.mx',
   },
 };

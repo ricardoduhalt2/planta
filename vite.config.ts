@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 
 export default defineConfig(({ mode }) => {
@@ -8,7 +9,19 @@ export default defineConfig(({ mode }) => {
   
   return {
     base: './',
-    plugins: [react()],
+    plugins: [
+      react(),
+      nodePolyfills({
+        // Enable polyfills for the browser
+        globals: {
+          Buffer: true,
+          global: true,
+          process: true,
+        },
+        // Enable polyfills for Node.js built-ins
+        protocolImports: true,
+      }),
+    ],
     define: {
       'process.env': {}
     },
@@ -21,8 +34,20 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       esbuildOptions: {
         target: 'es2020',
+        // Enable esbuild polyfill for IntersectionObserver
+        define: {
+          global: 'globalThis',
+        },
       },
-      include: ['react', 'react-dom', 'three', '@react-three/fiber', '@react-three/drei']
+      include: [
+        'react',
+        'react-dom',
+        'three',
+        '@react-three/fiber',
+        '@react-three/drei',
+        'intersection-observer'
+      ],
+      exclude: ['@tweenjs/tween.js']
     },
     server: {
       port: 3000,

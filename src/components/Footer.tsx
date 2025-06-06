@@ -1,14 +1,19 @@
-import React from 'react';
-import { PETGAS_GREEN, PETGAS_ACCENT_GREEN } from '../constants'; // Removed unused color imports
+import React, { lazy, Suspense } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+
+// Importación lazy del componente de burbujas
+const BubbleBackground = lazy(() => import('./BubbleBackground'));
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { t } = useLanguage();
 
   return (
-    <footer className={`bg-slate-900 text-slate-300 py-10 border-t-4 border-[#009A44]`}>
-      <div className="container mx-auto px-6 text-center">
+    <footer className="bg-slate-900 text-slate-300 py-10 border-t-4 border-[#009A44] relative overflow-hidden">
+      <Suspense fallback={null}>
+        <BubbleBackground />
+      </Suspense>
+      <div className="container mx-auto px-6 text-center relative z-20">
         <div className="mb-4">
           <img 
             src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 

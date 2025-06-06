@@ -52,7 +52,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto">
           {plants.map((plant) => (
             <div 
               key={plant.id}
@@ -65,11 +65,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
                 <img 
                   src={plant.mainImage} 
                   alt={`${t(plant.cardDisplayNameKey)} ${t('plantImageAltSuffix') || 'plant image'}`} 
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <div className="relative z-10 p-6 flex flex-col flex-grow w-full">
-                <h3 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#8CC63F] to-[#009A44] text-center">
+              <div className="relative z-10 p-8 flex flex-col flex-grow w-full">
+                <h3 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#8CC63F] to-[#009A44] text-center">
                   {t(plant.cardDisplayNameKey)}
                 </h3>
                 <button 

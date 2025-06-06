@@ -3,10 +3,10 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import PlantDetailView from './components/PlantDetailView';
 import Footer from './components/Footer';
-import { PlantData } from './types';
-import { ALL_PLANTS_DATA, PETGAS_GREEN, PETGAS_WHITE, MAIN_LOGO_URL, NAVBAR_LOGO_URL } from './constants';
+import { ALL_PLANTS_DATA } from './constants';
 import { useLanguage } from './contexts/LanguageContext';
 import ParticlesBackground from './components/ParticlesBackground';
+import LoadingScreen from './components/LoadingScreen';
 
 // Importar estilos de Tailwind CSS
 import './styles/main.css';
@@ -20,7 +20,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1200); // Adjusted loading time for modern feel
+    }, 3000); // Increased loading time for better effect
     return () => clearTimeout(timer);
   }, []);
   
@@ -49,25 +49,7 @@ const App: React.FC = () => {
   const selectedPlantData = ALL_PLANTS_DATA.find(p => p.id === selectedPlantId);
 
   if (isLoading) {
-    return (
-      // Loading screen with dark background matching the app's theme
-      <div className={`fixed inset-0 bg-gradient-to-br from-[#1f2937] to-[#111827] flex flex-col items-center justify-center z-[100] transition-opacity duration-500`}>
-        {/* Particles could also be rendered here if desired for the loading screen itself, 
-            but the #tsparticles-background div in index.html should already cover this. 
-            If explicitly needed: <ParticlesBackground /> */}
-        <img 
-          src={MAIN_LOGO_URL} 
-          alt={t('petgasLoadingLogoAlt')} 
-          className="h-20 md:h-24 mb-8 hero-logo-effects animated-logo-breathe" 
-        />
-        <div className="pulsing-dots-loader">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <p className={`text-xl font-semibold text-gray-300`}>{t('loading')}</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

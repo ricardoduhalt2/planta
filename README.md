@@ -65,7 +65,28 @@ src/
 └── types/          # Tipos de TypeScript
 ```
 
-## 🌟 Características Recientes
+## 📅 Historial de Cambios
+
+### [2025-06-06] - Actualización del Spinner y Documentación
+- Mejora del spinner de carga con múltiples anillos concéntricos
+- Efectos visuales mejorados con sombras y gradientes
+- Documentación actualizada del proyecto
+
+### [2025-06-06] - Mejoras Visuales
+- Actualización de estilos 3D
+- Efectos visuales mejorados en la pantalla de carga
+- Optimización de animaciones
+
+### [2025-06-06] - Nueva Característica
+- Animación de texto tipo terminal
+- Mejoras en la experiencia de usuario durante la carga
+
+### [2025-06-06] - Mejoras en el Visualizador 3D
+- Implementación de cielo etéreo
+- Transiciones suaves entre vistas
+- Optimización de rendimiento
+
+## 🌟 Características Principales
 
 - **Pantalla de Carga Mejorada**
   - Efecto de partículas 3D interactivas

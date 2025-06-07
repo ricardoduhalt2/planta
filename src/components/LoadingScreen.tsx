@@ -1,10 +1,33 @@
-import { useRef, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 
+// Contador de recursos cargados
+let resourcesLoaded = 0;
+const totalResources = 3; // Ajusta según el número de recursos críticos
+
+// Hook para manejar la carga de recursos
+const useResourceLoader = () => {
+  const [progress, setProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const resourceLoaded = () => {
+    resourcesLoaded++;
+    const newProgress = Math.min(100, Math.round((resourcesLoaded / totalResources) * 100));
+    setProgress(newProgress);
+    
+    if (resourcesLoaded >= totalResources) {
+      setTimeout(() => setIsLoaded(true), 500); // Pequeño delay para la animación
+    }
+  };
+
+  return { progress, isLoaded, resourceLoaded };
+};
+
 // Componente de partículas optimizado
-export const FloatingParticles = ({ count = 800 }) => {
+export const FloatingParticles = ({ count = 300, onLoad }: { count?: number; onLoad: () => void }) => {
   const particles = useRef<THREE.Points>(null);
+  const [ready, setReady] = useState(false);
   
   // Generar posiciones y colores de partículas
   const { positions, colors } = useMemo(() => {
@@ -12,32 +35,38 @@ export const FloatingParticles = ({ count = 800 }) => {
     const cols = new Float32Array(count * 3);
     
     for (let i = 0; i < count; i++) {
-      // Posiciones en una esfera
+      // Patrón más simple para mejor rendimiento
       const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      const radius = 5 + Math.random() * 15;
+      const r = 5 + Math.random() * 10;
       
-      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = radius * Math.cos(phi);
+      pos[i * 3] = r * Math.cos(theta) * 1.5;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 2 * 5;
+      pos[i * 3 + 2] = r * Math.sin(theta) * 1.5;
       
-      // Colores en tonos verdes
-      const green = 0.3 + Math.random() * 0.7;
+      // Colores más brillantes
+      const green = 0.5 + Math.random() * 0.5;
       cols[i * 3] = 0.1 * green;
-      cols[i * 3 + 1] = 0.5 * green;
-      cols[i * 3 + 2] = 0.2 * green;
+      cols[i * 3 + 1] = 0.8 * green;
+      cols[i * 3 + 2] = 0.3 * green;
     }
     
     return { positions: pos, colors: cols };
   }, [count]);
   
-  // Animación de las partículas
+  // Animación optimizada
   useFrame(({ clock }) => {
     if (particles.current) {
       particles.current.rotation.y = clock.getElapsedTime() * 0.1;
-      particles.current.rotation.x = clock.getElapsedTime() * 0.05;
     }
   });
+
+  // Notificar cuando las partículas estén listas
+  useEffect(() => {
+    if (!ready) {
+      setReady(true);
+      onLoad();
+    }
+  }, [onLoad, ready]);
   
   return (
     <points ref={particles}>
@@ -46,170 +75,123 @@ export const FloatingParticles = ({ count = 800 }) => {
           attach="attributes-position"
           args={[positions, 3]}
           count={positions.length / 3}
-          array={positions}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-color"
           args={[colors, 3]}
           count={colors.length / 3}
-          array={colors}
           itemSize={3}
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.15}
+        size={0.2}
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={0.9}
         sizeAttenuation
-        alphaTest={0.01}
+        alphaTest={0.05}
       />
     </points>
   );
 };
 
-// Componente de texto flotante
-const FloatingText = () => {
-  return (
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-green-400 to-green-500">
-        PETGAS
-      </h1>
-      <p className="text-green-200 text-sm">Iniciando sistema...</p>
-    </div>
-  );
-};
+// Componente principal del loading screen
+const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
+  const { progress, isLoaded, resourceLoaded } = useResourceLoader();
+  const [particlesLoaded, setParticlesLoaded] = useState(false);
+  
+  // Notificar cuando las partículas estén listas
+  const handleParticlesLoad = () => {
+    if (!particlesLoaded) {
+      setParticlesLoaded(true);
+      resourceLoaded();
+    }
+  };
+  
+  // Notificar cuando todo esté cargado
+  useEffect(() => {
+    if (isLoaded) {
+      setTimeout(onLoaded, 500); // Pequeño delay para la transición
+    }
+  }, [isLoaded, onLoaded]);
+  
+  // Precargar recursos
+  useEffect(() => {
+    // Contar el componente principal como un recurso cargado
+    resourceLoaded();
+    
+    // Cargar imagen del logo
+    const img = new Image();
+    img.src = 'https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png';
+    img.onload = resourceLoaded;
+    
+    return () => {
+      img.onload = null;
+    };
+  }, [resourceLoaded]);
 
-// Componente principal de la pantalla de carga
-const LoadingScreen = () => {
   return (
-    <div className="fixed inset-0 overflow-hidden" style={{ 
-      background: 'radial-gradient(ellipse at center, #001a0d 0%, #000000 100%)',
-      opacity: 0.9,
-      transition: 'opacity 0.8s ease-in-out'
-    }}>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-          }
-          .glow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(0, 90, 48, 0.15) 0%, transparent 70%);
-            animation: float 8s ease-in-out infinite;
-          }
-          @keyframes spin-slow {
-            to { transform: rotate(360deg); }
-          }
-          .spin-slow {
-            animation: spin-slow 10s linear infinite;
-          }
-          @keyframes gradientText {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `
-      }} />
-      <div className="glow" />
-      <Canvas 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 0,
-          background: 'transparent',
-          opacity: 0.8
-        }}
-        camera={{ position: [0, 0, 30], fov: 60, near: 0.1, far: 100 }}
-      >
-        <FloatingParticles count={800} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} color="#00ff88" />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#00aaff" />
-        <fog attach="fog" args={['#001a0d', 10, 50]} />
-      </Canvas>
+    <div 
+      className={`fixed inset-0 bg-gradient-to-br from-green-900 to-green-950 flex flex-col items-center justify-center z-50 transition-opacity duration-500 ${
+        isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      {/* Fondo con partículas */}
+      <div className="absolute inset-0 w-full h-full">
+        <Canvas 
+          camera={{ position: [0, 0, 20], fov: 50 }}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1} color="#00ff88" />
+          <FloatingParticles count={400} onLoad={handleParticlesLoad} />
+        </Canvas>
+      </div>
+
+      {/* Efecto de brillo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-green-900/20" />
       
-      <div className="absolute inset-0 flex items-center justify-center z-10">
-        <div className="relative">
-          <div className="relative w-40 h-40 mx-auto mb-8">
-            {/* Anillo exterior - gira lentamente en sentido horario */}
-            <div className="absolute inset-0 border-4 border-transparent border-t-green-400 border-r-green-500 rounded-full spin-slow" 
-                 style={{ boxShadow: '0 0 15px rgba(0, 255, 100, 0.3)' }}></div>
-            
-            {/* Anillo intermedio - gira en sentido antihorario */}
-            <div className="absolute inset-3 border-4 border-transparent border-b-green-400 border-l-green-500 rounded-full spin-slow" 
-                 style={{ animationDirection: 'reverse', boxShadow: '0 0 10px rgba(0, 200, 100, 0.3)' }}></div>
-            
-            {/* Anillo interior - gira más rápido en sentido horario */}
-            <div className="absolute inset-6 border-4 border-transparent border-t-green-300 border-r-green-400 rounded-full spin-slow" 
-                 style={{ animationDuration: '5s', boxShadow: '0 0 8px rgba(0, 255, 150, 0.3)' }}></div>
-            
-            {/* Centro con gradiente y brillo */}
-            <div className="absolute inset-8 bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-full flex items-center justify-center"
-                 style={{ boxShadow: '0 0 20px rgba(0, 255, 100, 0.4)' }}>
-              <div className="absolute inset-0.5 bg-green-600 rounded-full blur-sm opacity-70"></div>
-            </div>
-          </div>
-          
-          <FloatingText />
+      {/* Contenido central */}
+      <div className="relative z-10 text-center p-8 bg-black/30 backdrop-blur-sm rounded-2xl border border-green-500/20 shadow-2xl">
+        {/* Logo */}
+        <div className="mb-8">
+          <img 
+            src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
+            alt="PETGAS" 
+            className="h-24 mx-auto mb-6 drop-shadow-lg"
+          />
         </div>
+        
+        {/* Spinner */}
+        <div className="relative w-32 h-32 mx-auto mb-8">
+          {/* Anillo exterior - gira lentamente en sentido horario */}
+          <div className="absolute inset-0 border-4 border-transparent border-t-green-400 border-r-green-500 rounded-full animate-spin-slow" 
+               style={{ boxShadow: '0 0 15px rgba(0, 255, 100, 0.3)' }}></div>
+          
+          {/* Anillo intermedio - gira en sentido antihorario */}
+          <div className="absolute inset-3 border-4 border-transparent border-b-green-400 border-l-green-500 rounded-full animate-spin-slow animate-reverse" 
+               style={{ boxShadow: '0 0 10px rgba(0, 200, 100, 0.3)' }}></div>
+          
+          {/* Anillo interior - gira más rápido en sentido horario */}
+          <div className="absolute inset-6 border-4 border-transparent border-t-green-300 border-r-green-400 rounded-full animate-spin-slow animate-faster" 
+               style={{ boxShadow: '0 0 8px rgba(0, 255, 150, 0.3)' }}></div>
+          
+          {/* Centro con gradiente y brillo */}
+          <div className="absolute inset-8 bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-full flex items-center justify-center"
+               style={{ boxShadow: '0 0 20px rgba(0, 255, 100, 0.4)' }}>
+            <div className="absolute inset-0.5 bg-green-600 rounded-full blur-sm opacity-70"></div>
+            <span className="text-white font-bold text-sm">{progress}%</span>
+          </div>
+        </div>
+        
+        {/* Texto de carga */}
+        <p className="text-green-100 text-sm font-medium tracking-wider">
+          Cargando recursos...
+        </p>
       </div>
       
-      {/* Efecto de brillo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-green-900 opacity-20" />
-      
-      <style>{`
-        @keyframes spin-slow {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes spin-slow-reverse {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 4s linear infinite;
-        }
-        
-        .animate-spin-slow-reverse {
-          animation: spin-slow-reverse 3s linear infinite;
-        }
-        
-        @keyframes pulse {
-          0%, 100% { 
-            transform: scale(0.95);
-            opacity: 0.8;
-          } 
-          50% { 
-            transform: scale(1.05);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes gradientText {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-        
-        .glow {
-          text-shadow: 0 0 10px #88ff88, 0 0 20px #88ff88, 0 0 30px #00ff88;
-          filter: drop-shadow(0 0 5px rgba(136, 255, 136, 0.7));
-        }
-      `}</style>
+      {/* Los estilos de animación están en main.css */}
     </div>
   );
 };

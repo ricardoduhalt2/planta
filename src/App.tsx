@@ -77,7 +77,7 @@ const App: React.FC = () => {
   const selectedPlantData = ALL_PLANTS_DATA.find(p => p.id === selectedPlantId);
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen onLoaded={() => setIsLoading(false)} />;
   }
 
   return (
@@ -102,7 +102,10 @@ const App: React.FC = () => {
           camera={{ position: [0, 0, 30], fov: 60, near: 0.1, far: 100 }}
         >
           <Suspense fallback={null}>
-            <FloatingParticles count={800} />
+            <FloatingParticles 
+              count={800} 
+              onLoad={() => console.log('Particles loaded')} 
+            />
           </Suspense>
           <pointLight position={[10, 10, 10]} intensity={0.8} color="#00ff88" />
           <pointLight position={[-10, -10, -10]} intensity={0.5} color="#00aaff" />
@@ -121,23 +124,25 @@ const App: React.FC = () => {
       }} />
       
       {/* Contenido principal */}
-      <div className="relative z-10">
-        <Navbar 
-          plants={ALL_PLANTS_DATA} 
-          selectedPlantId={selectedPlantId}
-          onSelectPlant={handleSelectPlant}
-          onShowHome={handleShowHome}
-        />
-        <main className={`flex-grow transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-          {selectedPlantData ? (
-            <PlantDetailView plant={selectedPlantData} />
-          ) : (
-            <HeroSection plants={ALL_PLANTS_DATA} onSelectPlant={handleSelectPlant} />
-          )}
-        </main>
+      <div className="relative">
+        <div className="relative z-10">
+          <Navbar 
+            plants={ALL_PLANTS_DATA} 
+            selectedPlantId={selectedPlantId}
+            onSelectPlant={handleSelectPlant}
+            onShowHome={handleShowHome}
+          />
+          <main className={`flex-grow transition-opacity duration-300 min-h-[calc(100vh-200px)] ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            {selectedPlantData ? (
+              <PlantDetailView plant={selectedPlantData} />
+            ) : (
+              <HeroSection plants={ALL_PLANTS_DATA} onSelectPlant={handleSelectPlant} />
+            )}
+          </main>
+        </div>
         <Footer />
-      <ScrollToTopButton />
-    </div>
+        <ScrollToTopButton />
+      </div>
     </div>
   );
 };

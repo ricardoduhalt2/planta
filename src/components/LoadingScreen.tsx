@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import { FloatingParticles } from './FloatingParticles';
+import { useLanguage } from '../contexts/LanguageContext';
+import { LOGO_URLS } from '../constants';
 
 // Función para simular carga suave
 export const simulateSmoothLoading = (callback: () => void) => {
@@ -108,8 +110,23 @@ const FloatingText = ({ text, delay = 0 }: { text: string; delay?: number }) => 
   );
 };
 
-// Componente de barra de progreso futurista
+// Componente de barra de progreso futurista con transición de colores
 const ProgressBar = ({ progress }: { progress: number }) => {
+  // Función para obtener el color basado en el progreso
+  const getGradientColors = (progress: number) => {
+    if (progress < 25) {
+      return 'from-blue-400 to-cyan-400';
+    } else if (progress < 50) {
+      return 'from-cyan-400 to-teal-400';
+    } else if (progress < 75) {
+      return 'from-teal-400 to-emerald-400';
+    } else if (progress < 100) {
+      return 'from-emerald-400 to-green-400';
+    } else {
+      return 'from-green-400 to-green-500';
+    }
+  };
+
   return (
     <motion.div 
       className="relative w-64 h-2 bg-gray-800 rounded-full overflow-hidden mt-4"
@@ -118,14 +135,43 @@ const ProgressBar = ({ progress }: { progress: number }) => {
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-400 to-cyan-400"
+        className={`absolute top-0 left-0 h-full bg-gradient-to-r ${getGradientColors(progress)}`}
         initial={{ width: '0%' }}
         animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        transition={{ 
+          duration: 0.8, 
+          ease: 'easeInOut',
+          backgroundColor: { duration: 1.5 }
+        }}
       >
-        <div className="absolute inset-0 bg-white opacity-30 animate-pulse"></div>
+        <motion.div 
+          className="absolute inset-0 bg-white opacity-30"
+          animate={{
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: progress < 100 ? Infinity : 0,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
       </motion.div>
-      <div className="absolute inset-0 border border-green-400/30 rounded-full pointer-events-none"></div>
+      <motion.div 
+        className="absolute inset-0 border rounded-full pointer-events-none"
+        style={{
+          borderColor: 'rgba(74, 222, 128, 0.3)'
+        }}
+        animate={{
+          borderColor: ['rgba(74, 222, 128, 0.3)', 'rgba(52, 211, 153, 0.5)', 'rgba(74, 222, 128, 0.3)'],
+        }}
+        transition={{
+          duration: 3,
+          repeat: progress < 100 ? Infinity : 0,
+          repeatType: 'reverse',
+          ease: 'easeInOut'
+        }}
+      />
     </motion.div>
   );
 };
@@ -139,6 +185,7 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [animationStage, setAnimationStage] = useState(0);
   const [showContent, setShowContent] = useState(false);
+  const { language } = useLanguage();
   // Efecto para la secuencia de animación
   useEffect(() => {
     const timer1 = setTimeout(() => setAnimationStage(1), 500);
@@ -296,9 +343,14 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
         >
           <div className="relative inline-block">
             <img 
-              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
+              src={LOGO_URLS[language as keyof typeof LOGO_URLS].main}
               alt="PETGAS" 
-              className="h-16 mx-auto mb-1 drop-shadow-lg" 
+              className="h-16 mx-auto mb-1 drop-shadow-lg"
+              onError={(e) => {
+                // Fallback en caso de error
+                const target = e.target as HTMLImageElement;
+                target.src = LOGO_URLS.es.main;
+              }}
             />
             <div className="absolute inset-0 bg-cyan-400 rounded-full opacity-20 blur-xl -z-10"></div>
           </div>
@@ -306,12 +358,111 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
 
         {/* Texto de carga con animación */}
         <motion.div 
-          className="mb-6"
+          className="mb-6 font-mono text-cyan-300 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <FloatingText text={localProgress < 100 ? (animationStage === 0 ? 'Iniciando sistemas...' : animationStage === 1 ? 'Cargando módulos...' : 'Listo') : '¡Listo!'} />
+          <motion.div 
+            className="text-sm mb-2 min-h-[20px]"
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: 1,
+              color: [
+                '#38bdf8', // blue-400
+                '#22d3ee', // cyan-400
+                '#2dd4bf', // teal-400
+                '#34d399', // emerald-400
+                '#4ade80'  // green-400
+              ][Math.min(Math.floor(localProgress / 25), 4)]
+            }}
+            transition={{ 
+              duration: 0.8,
+              color: { duration: 1.5, ease: 'easeInOut' }
+            }}
+          >
+            {localProgress < 25 && (
+              <motion.span
+                key="init"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                Initializing system...
+              </motion.span>
+            )}
+            {localProgress >= 25 && localProgress < 50 && (
+              <motion.span
+                key="loading"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                Loading components...
+              </motion.span>
+            )}
+            {localProgress >= 50 && localProgress < 75 && (
+              <motion.span
+                key="setting"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                Setting up environment...
+              </motion.span>
+            )}
+            {localProgress >= 75 && localProgress < 100 && (
+              <motion.span
+                key="finalizing"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                Finalizing setup...
+              </motion.span>
+            )}
+            {localProgress >= 100 && (
+              <motion.span
+                key="ready"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                  textShadow: '0 0 10px rgba(74, 222, 128, 0.5)'
+                }}
+                transition={{ 
+                  duration: 0.5,
+                  delay: 0.2
+                }}
+                className="inline-block"
+              >
+                System ready
+              </motion.span>
+            )}
+          </motion.div>
+          <div className="flex items-center justify-center space-x-1 text-2xl h-6">
+            {[0, 1, 2].map((dot) => (
+              <motion.span
+                key={dot}
+                className="inline-block w-1 h-1 mx-0.5 bg-cyan-400 rounded-full"
+                animate={{
+                  y: ['0%', '-50%', '0%'],
+                  opacity: [0.3, 1, 0.3],
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: localProgress < 100 ? Infinity : 0,
+                  repeatType: 'loop',
+                  delay: dot * 0.15,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
+          </div>
         </motion.div>
 
         {/* Spinner futurista */}

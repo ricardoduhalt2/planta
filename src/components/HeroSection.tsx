@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { PlantData } from '../types';
-import { MAIN_LOGO_URL } from '../constants';
+import { LOGO_URLS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import Plant3DAnimation from './Plant3DAnimation';
 import MarqueeText from './MarqueeText';
@@ -21,12 +21,12 @@ interface HeroSectionProps {
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="min-h-[calc(100vh-70px)] bg-transparent flex flex-col items-center justify-center p-6 text-center selection:bg-[#A0D468] selection:text-white">
       <img 
-        src={MAIN_LOGO_URL} 
+        src={LOGO_URLS[language as keyof typeof LOGO_URLS].main} 
         alt={t('petgasMainLogoAlt')}
         className="hero-logo-effects w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto h-auto mb-10 mt-8"
       />

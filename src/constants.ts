@@ -1,8 +1,20 @@
 import { PlantData, CommonText, PlantSection } from './types';
 
-// Updated Logo URLs
-export const MAIN_LOGO_URL = 'https://www.petgas.com.mx/wp-content/uploads/2025/06/LogoConTexto.png';
-export const NAVBAR_LOGO_URL = 'https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png';
+// Logo URLs by language
+export const LOGO_URLS = {
+  es: {
+    main: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-esp1.png',
+    navbar: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-esp1.png'
+  },
+  en: {
+    main: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-ingles1.png',
+    navbar: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-ingles1.png'
+  }
+};
+
+// For backward compatibility
+export const MAIN_LOGO_URL = LOGO_URLS.es.main;
+export const NAVBAR_LOGO_URL = LOGO_URLS.es.navbar;
 
 const P90_DATA: PlantData = {
   id: 'p-90',

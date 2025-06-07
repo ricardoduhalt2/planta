@@ -67,11 +67,11 @@ const Footer: React.FC = () => {
                 src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
                 alt={t('petgasLogoAlt')} 
                 className={`h-14 mx-auto mb-3 transition-all duration-1000 ease-in-out ${isGlowing ? 'animate-glowPulse' : ''}`}
-              style={{
-                animation: isGlowing ? 'glowPulse 2s infinite' : 'none',
-                filter: isGlowing ? 'drop-shadow(0 0 10px rgba(140, 198, 63, 0.8))' : 'none',
-                transition: 'filter 1s ease-in-out'
-              }}
+                style={{
+                  animation: isGlowing ? 'glowPulse 2s infinite' : 'none',
+                  filter: isGlowing ? 'drop-shadow(0 0 10px rgba(140, 198, 63, 0.8))' : 'none',
+                  transition: 'filter 1s ease-in-out'
+                }}
               />
             </div>
             <p className="mb-3 text-sm text-gray-300">&copy; {currentYear} {t('footerRights')}</p>

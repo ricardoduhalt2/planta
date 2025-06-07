@@ -343,14 +343,9 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
         >
           <div className="relative inline-block">
             <img 
-              src={LOGO_URLS[language as keyof typeof LOGO_URLS].main}
+              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png"
               alt="PETGAS" 
               className="h-16 mx-auto mb-1 drop-shadow-lg"
-              onError={(e) => {
-                // Fallback en caso de error
-                const target = e.target as HTMLImageElement;
-                target.src = LOGO_URLS.es.main;
-              }}
             />
             <div className="absolute inset-0 bg-cyan-400 rounded-full opacity-20 blur-xl -z-10"></div>
           </div>

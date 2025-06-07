@@ -1,6 +1,5 @@
 import React from 'react';
 import { PlantData } from '../types';
-
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface NavbarProps {
@@ -21,11 +20,18 @@ const Navbar: React.FC<NavbarProps> = ({ plants, selectedPlantId, onSelectPlant,
     <nav className="bg-gray-900/70 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-gray-700/50">
       <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <div onClick={onShowHome} className="cursor-pointer flex items-center group" aria-label={t('home')}>
-          <img 
-            src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png"
-            alt={t('petgasLogoAlt')} 
-            className="h-10 md:h-12 mr-2 transform group-hover:scale-105 transition-transform duration-200" 
-          />
+          <div className="relative">
+            <img 
+              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png"
+              alt={t('petgasLogoAlt')} 
+              className="h-10 md:h-12 mr-2 transform group-hover:scale-105 transition-transform duration-200 relative z-10"
+              style={{
+                filter: 'drop-shadow(0 0 10px rgba(140, 198, 63, 0.6))',
+                transition: 'filter 1s ease-in-out'
+              }}
+            />
+            <div className="absolute inset-0 bg-[#8CC63F] rounded-full opacity-20 blur-xl -z-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+          </div>
           <span className={`hidden sm:inline text-xl font-bold group-hover:opacity-80 transition-opacity animated-gradient-title`}>Petgas</span>
         </div>
         <div className="flex items-center space-x-1 md:space-x-2">

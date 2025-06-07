@@ -29,7 +29,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
         alt={t('petgasMainLogoAlt')}
         className="hero-logo-effects w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto h-auto mb-10 mt-8"
       />
-      <h1 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 animated-gradient-title text-gray-100`}>
+      <h1 className={`text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 animated-gradient-title text-gray-100`}>
         {t('heroTitle')}
       </h1>
       <p className="text-lg md:text-xl text-gray-300 max-w-3xl mb-12 leading-relaxed">
@@ -80,10 +80,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
                 </div>
                 <div className="absolute -bottom-1 left-0 w-0 h-1 bg-gradient-to-r from-[#8CC63F] via-[#009A44] to-[#8CC63F] group-hover:w-full transition-all duration-700 ease-out"></div>
               </div>
-              <div className="relative z-10 p-8 flex flex-col flex-grow w-full">
-                <h3 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#8CC63F] to-[#009A44] text-center">
-                  {t(plant.cardDisplayNameKey)}
-                </h3>
+              <div className="relative z-10 p-8 flex flex-col flex-grow w-full bg-transparent">
+                <div className="bg-transparent p-2 rounded-lg">
+                  <h3 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#8CC63F] to-[#009A44] text-center">
+                    {t(plant.cardDisplayNameKey)}
+                  </h3>
+                </div>
                 <button 
                   aria-label={`${t('viewDetails')} for ${t(plant.cardDisplayNameKey)}`}
                   className="glass-button w-full mt-auto py-3 px-5 text-white font-medium tracking-wide group-hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center gap-2"

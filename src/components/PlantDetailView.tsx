@@ -49,19 +49,17 @@ const AnimatedSectionCard: React.FC<AnimatedSectionProps> = ({ titleKey, childre
   return (
     <div 
       ref={ref} 
-      className={`fade-in ${isVisible ? 'visible' : ''} backdrop-blur-md bg-white/5 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 rounded-2xl mb-10 overflow-hidden`}
-      style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-      }}
+      className={`fade-in ${isVisible ? 'visible' : ''} backdrop-blur-md border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 rounded-2xl mb-10 overflow-hidden relative`}
     >
-      <h2 className={`text-3xl font-bold mb-6 border-b-2 border-[#A0D468] pb-3 flex items-center text-white ${additionalTitleClassName}`}>
-        {iconType && <SectionIcon type={iconType} />}
-        {t(titleKey)}
-      </h2>
-      <div className="text-gray-200">
-        {children}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#001a0d] via-[#00331a] to-[#001a0d] opacity-90 z-0"></div>
+      <div className="relative z-10">
+        <h2 className={`text-3xl font-bold mb-6 border-b-2 border-[#A0D468] pb-3 flex items-center text-white ${additionalTitleClassName}`}>
+          {iconType && <SectionIcon type={iconType} />}
+          {t(titleKey)}
+        </h2>
+        <div className="text-gray-200">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -395,11 +393,17 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
   return (
     <div className={`container mx-auto p-4 md:p-6 lg:p-8 bg-transparent min-h-screen selection:bg-[#A0D468] selection:text-white`}>
-      <header className="mb-12 text-center py-10 rounded-2xl shadow-2xl relative overflow-hidden border border-white/10">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#009A44] via-[#8CC63F] to-[#009A44] bg-[length:200%_auto] animate-gradient"></div>
-        <div className="absolute inset-0 backdrop-blur-md bg-white/5 rounded-2xl"></div>
-        <div className="relative z-10">
-          <div className="mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full backdrop-blur-sm bg-white/10 p-2">
+      <header className="mb-12 text-center py-10 rounded-2xl relative overflow-hidden">
+        {/* Fondo con efecto vidrio */}
+        <div className="absolute inset-0 backdrop-blur-md bg-black/30 rounded-2xl border border-white/10"></div>
+        
+        {/* Borde con gradiente animado */}
+        <div className="absolute inset-0 p-[1px] rounded-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#009A44] via-[#8CC63F] to-[#009A44] bg-[length:200%_auto] animate-gradient rounded-2xl"></div>
+        </div>
+        
+        <div className="relative z-10 bg-transparent">
+          <div className="mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full backdrop-blur-sm bg-white/10 p-2 border border-white/10">
             <img 
               src={plant.logoUrl} 
               alt={t('plantSpecificLogoAlt')} 
@@ -407,7 +411,9 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
             />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 tracking-tight drop-shadow-lg">{plant.fullName}</h1>
-          <p className="text-xl md:text-2xl text-gray-100 font-light drop-shadow">{t(plant.titleKey)}</p>
+          <div className="bg-transparent p-2 rounded-lg">
+            <p className="text-xl md:text-2xl text-gray-100 font-light drop-shadow">{t(plant.titleKey)}</p>
+          </div>
         </div>
         <style>
           {`

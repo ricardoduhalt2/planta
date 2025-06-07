@@ -5,6 +5,10 @@ Aplicación web interactiva para visualizar plantas de procesamiento de PetGas. 
 ## 🚀 Últimas Actualizaciones
 
 ### Mejoras Recientes (Junio 2024)
+- 🎨 Mejoras en la interfaz de usuario con fondos transparentes en los encabezados
+- ✨ Optimización de la visualización de tarjetas de plantas
+- 🌐 Mejoras en la accesibilidad y etiquetas ARIA
+- 📱 Ajustes responsivos para mejor visualización en dispositivos móviles
 - ✅ Sección de Mantenimiento Preventivo y Correctivo actualizada para todas las plantas
 - ✅ Sección de Consumibles Esenciales mejorada con recomendaciones detalladas
 - ✅ Requisitos Operativos completados con información detallada

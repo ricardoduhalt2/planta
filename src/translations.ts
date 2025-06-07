@@ -13,7 +13,7 @@ export const translations: Record<Language, Record<string, any>> = {
     switchToSpanish: 'Cambiar a Español', // Though not used when 'es' is active, good for completeness
     
     // Hero Section
-    heroTitle: 'Transformando el plástico no reciclable en energía Limpia',
+    heroTitle: 'Transformando el Plástico no Reciclable en Energía Limpia',
     heroSubtitle: 'Descubre nuestra tecnología de pirolisis no catalitica que transforma los residuos plásticos en combustibles no fósiles, impulsando la seguridad energética y un futuro para todos.',
     ourPlants: 'Nuestras Plantas Innovadoras',
     viewDetails: 'Explorar Detalles',

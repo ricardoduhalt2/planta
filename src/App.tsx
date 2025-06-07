@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import { ALL_PLANTS_DATA } from './constants';
 import { useLanguage } from './contexts/LanguageContext';
 import LoadingScreen from './components/LoadingScreen';
-import { FloatingParticles } from './components/LoadingScreen';
+import FloatingParticles from './components/FloatingParticles';
 import ScrollToTopButton from './components/ScrollToTopButton';
 
 // Importar estilos de Tailwind CSS
@@ -29,6 +29,12 @@ const backgroundStyles = `
 `;
 
 const App: React.FC = () => {
+  // Estados
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [contentOpacity, setContentOpacity] = useState<number>(0);
+  
   // Inyectar estilos en el head del documento
   React.useEffect(() => {
     const style = document.createElement('style');
@@ -39,24 +45,81 @@ const App: React.FC = () => {
     };
   }, []);
   
-  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   // Se mantiene useLanguage para futuras traducciones
   useLanguage();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Tiempo mínimo que se mostrará el loading (10 segundos)
+    const minLoadingTime = 10000;
+    // Tiempo máximo que puede durar el loading (20 segundos)
+    const maxLoadingTime = 20000;
+    
+    const startTime = Date.now();
+    let resourcesLoaded = false;
+    let minTimeReached = false;
+    
+    // Función para verificar si todos los recursos están cargados
+    const checkResources = () => {
+      const images = Array.from(document.images);
+      
+      // Verificar si todas las imágenes están cargadas
+      const allImagesLoaded = images.every(img => img.complete);
+      
+      // Verificar si el DOM está completamente cargado
+      const domLoaded = document.readyState === 'complete';
+      
+      return allImagesLoaded && domLoaded;
+    };
+    
+    // Función para intentar ocultar el loading
+    const tryHideLoading = () => {
+      const currentTime = Date.now();
+      const timeElapsed = currentTime - startTime;
+      
+      // Verificar si ya pasó el tiempo mínimo y si los recursos están cargados
+      if (timeElapsed >= minLoadingTime && (resourcesLoaded || checkResources())) {
+        setContentOpacity(1);
+        setIsLoading(false);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return true;
+      }
+      return false;
+    };
+    
+    // Función para verificar recursos periódicamente
+    const checkResourcesInterval = setInterval(() => {
+      if (checkResources()) {
+        resourcesLoaded = true;
+        if (minTimeReached && tryHideLoading()) {
+          clearInterval(checkResourcesInterval);
+          clearTimeout(maxTimeTimer);
+        }
+      }
+    }, 100);
+    
+    // Configurar el tiempo mínimo
+    const minTimeTimer = setTimeout(() => {
+      minTimeReached = true;
+      if (tryHideLoading()) {
+        clearInterval(checkResourcesInterval);
+        clearTimeout(maxTimeTimer);
+      }
+    }, minLoadingTime);
+    
+    // Configurar el tiempo máximo como respaldo
+    const maxTimeTimer = setTimeout(() => {
+      clearInterval(checkResourcesInterval);
       setIsLoading(false);
-    }, 3000); // Increased loading time for better effect
-    return () => clearTimeout(timer);
-  }, []);
-  
-  useEffect(() => {
-    if (!isLoading) { 
       window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-  }, [selectedPlantId, isLoading]);
+    }, maxLoadingTime);
+    
+    // Limpiar timers al desmontar
+    return () => {
+      clearInterval(checkResourcesInterval);
+      clearTimeout(minTimeTimer);
+      clearTimeout(maxTimeTimer);
+    };
+  }, []);
 
   const handleSelectPlant = (id: string) => {
     setIsTransitioning(true);
@@ -76,16 +139,30 @@ const App: React.FC = () => {
 
   const selectedPlantData = ALL_PLANTS_DATA.find(p => p.id === selectedPlantId);
 
+  // Mostrar el LoadingScreen hasta que todo esté cargado
   if (isLoading) {
-    return <LoadingScreen onLoaded={() => setIsLoading(false)} />;
+    return (
+      <div className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50">
+        <LoadingScreen onLoaded={() => {
+          // Pequeño retraso para asegurar que la transición sea visible
+          setTimeout(() => {
+            setContentOpacity(1);
+            setIsLoading(false);
+          }, 500);
+        }} />
+      </div>
+    );
   }
 
   return (
-    <div className="relative flex flex-col min-h-screen overflow-hidden" style={{ 
-      background: 'radial-gradient(ellipse at center, #001a0d 0%, #000000 100%)',
-      opacity: 0.98,
-      transition: 'opacity 0.8s ease-in-out'
-    }}>
+    <div 
+      className="relative flex flex-col min-h-screen overflow-hidden" 
+      style={{ 
+        background: 'radial-gradient(ellipse at center, #001a0d 0%, #000000 100%)',
+        opacity: contentOpacity,
+        transition: 'opacity 0.8s ease-in-out'
+      }}
+    >
       {/* Efecto de partículas flotantes */}
       <div className="fixed inset-0 -z-10">
         <Canvas 

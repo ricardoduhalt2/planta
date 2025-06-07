@@ -57,16 +57,28 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
             <div 
               key={plant.id}
               onClick={() => onSelectPlant(plant.id)}
-              className="relative bg-slate-800/80 backdrop-filter backdrop-blur-lg rounded-2xl shadow-2xl hover:shadow-[0_10px_30px_-5px_rgba(0,154,68,0.3)] transform hover:-translate-y-1 transition-all duration-400 cursor-pointer border border-slate-700/50 hover:border-[#009A44]/50 flex flex-col items-center group overflow-hidden hover:bg-slate-800/70 transition-colors duration-300"
+              className="relative bg-slate-800/80 backdrop-filter backdrop-blur-lg rounded-2xl shadow-2xl hover:shadow-[0_25px_50px_-12px_rgba(0,154,68,0.25)] transform hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer border border-slate-700/50 hover:border-[#009A44]/50 flex flex-col items-center group overflow-hidden hover:bg-slate-800/70 transition-colors duration-300"
             >
+              {/* Efecto de brillo al pasar el ratón */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-transparent opacity-0 group-hover:opacity-100 group-hover:bg-[rad-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#8CC63F]/10 via-transparent to-[#009A44]/10 transition-opacity duration-700"></div>
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[#009A44]/5 group-hover:to-[#8CC63F]/10 transition-all duration-500"></div>
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#8CC63F] via-[#009A44] to-[#8CC63F] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-              <div className="relative z-10 w-full overflow-hidden">
-                <img 
-                  src={plant.mainImage} 
-                  alt={`${t(plant.cardDisplayNameKey)} ${t('plantImageAltSuffix') || 'plant image'}`} 
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+              <div className="relative z-10 w-full h-64 overflow-hidden">
+                <div className="relative w-full h-full overflow-hidden">
+                  <img 
+                    src={plant.mainImage} 
+                    alt={`${t(plant.cardDisplayNameKey)} ${t('plantImageAltSuffix') || 'plant image'}`} 
+                    className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105 group-hover:brightness-110"
+                    style={{
+                      transformOrigin: 'center center',
+                      willChange: 'transform',
+                      objectPosition: plant.id === 'petgas-4k' ? 'center 30%' : 'center center'
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#8CC63F]/20 to-[#009A44]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                </div>
+                <div className="absolute -bottom-1 left-0 w-0 h-1 bg-gradient-to-r from-[#8CC63F] via-[#009A44] to-[#8CC63F] group-hover:w-full transition-all duration-700 ease-out"></div>
               </div>
               <div className="relative z-10 p-8 flex flex-col flex-grow w-full">
                 <h3 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#8CC63F] to-[#009A44] text-center">

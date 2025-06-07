@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 
 // Componente de partículas optimizado
-const FloatingParticles = ({ count = 800 }) => {
+export const FloatingParticles = ({ count = 800 }) => {
   const particles = useRef<THREE.Points>(null);
   
   // Generar posiciones y colores de partículas

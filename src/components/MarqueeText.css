@@ -1,0 +1,62 @@
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Animación de parpadeo para el logo */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.7));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(0, 154, 68, 0.9));
+  }
+}
+
+.pulsating-logo {
+  animation: pulse 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.pulsating-logo:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 20px rgba(0, 154, 68, 1));
+}
+
+/* Asegurar que el contenedor oculte el desbordamiento */
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+/* Ajustes para el texto con gradiente */
+.animated-gradient-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+  .absolute.inset-y-0 {
+    width: 30px !important;
+  }
+  
+  .absolute.inset-y-0.left-0 {
+    background: linear-gradient(90deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0) 100%) !important;
+  }
+  
+  .absolute.inset-y-0.right-0 {
+    background: linear-gradient(270deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0) 100%) !important;
+  }
+  
+  .pulsating-logo {
+    height: 24px !important;
+    margin: 0 12px !important;
+  }
+}

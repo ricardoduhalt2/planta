@@ -12,12 +12,22 @@ import ScrollToTopButton from './components/ScrollToTopButton';
 
 // Importar estilos de Tailwind CSS
 import './styles/main.css';
+import './styles/fonts.css';
 
 // Estilos de animación para el fondo
 const backgroundStyles = `
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
+  }
+  
+  /* Asegurar que el gradiente de texto sea compatible con navegadores */
+  @supports (-webkit-background-clip: text) {
+    .animated-gradient-text {
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
   .glow {
     position: absolute;

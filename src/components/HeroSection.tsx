@@ -3,6 +3,7 @@ import { PlantData } from '../types';
 import { MAIN_LOGO_URL } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import Plant3DAnimation from './Plant3DAnimation';
+import MarqueeText from './MarqueeText';
 
 // Componente de carga para la visualización 3D
 const Loading3DModel = () => (
@@ -32,9 +33,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
       <h1 className={`text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 animated-gradient-title text-gray-100`}>
         {t('heroTitle')}
       </h1>
-      <p className="text-lg md:text-xl text-gray-300 max-w-3xl mb-12 leading-relaxed">
-        {t('heroSubtitle')}
-      </p>
+      <div className="w-full max-w-4xl mx-auto mb-12 relative">
+        <div className="relative overflow-hidden">
+          <MarqueeText 
+            text={t('heroSubtitle')}
+            className="text-lg md:text-xl text-gray-300 font-light py-3 px-4 rounded-lg bg-gradient-to-r from-gray-900/50 to-gray-800/30 backdrop-blur-sm border border-gray-700/30"
+            speed={20}
+          />
+        </div>
+      </div>
       
       <div className="mb-10 w-full max-w-6xl px-4">
         <h2 className="text-3xl font-bold mb-10 animated-gradient-title text-gray-100">{t('ourPlants')}</h2>

@@ -61,12 +61,27 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'assets',
       sourcemap: true,
       emptyOutDir: true,
+      target: 'es2015', // Mejor compatibilidad con navegadores antiguos
+      minify: 'terser', // Mejor minificación
+      cssCodeSplit: true, // Optimización de CSS
+      chunkSizeWarningLimit: 1000, // Aumentar límite de advertencia de tamaño
       rollupOptions: {
         output: {
           manualChunks: {
             three: ['three', 'three/examples/jsm/controls/OrbitControls'],
             react: ['react', 'react-dom', 'react-router-dom']
-          }
+          },
+          // Mejorar la compatibilidad con navegadores antiguos
+          entryFileNames: 'assets/[name].[hash].js',
+          chunkFileNames: 'assets/[name].[hash].js',
+          assetFileNames: 'assets/[name].[hash][extname]'
+        }
+      },
+      terserOptions: {
+        compress: {
+          ecma: 2015,
+          pure_getters: true,
+          passes: 3
         }
       }
     }

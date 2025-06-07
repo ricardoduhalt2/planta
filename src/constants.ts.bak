@@ -176,15 +176,15 @@ const PETGAS_4K_DATA: PlantData = {
     { key: 'consumable_gaskets', value: 'consumable_gaskets_recommendation_4k'}
   ],
   operationalRequirements: [
-    { key: 'op_req_water', value: '1,200 Litros' },
-    { key: 'op_req_piping', value: 'Tubería de acero al carbón o acero inoxidable según requerimientos de presión' },
-    { key: 'op_req_wiring', value: 'Sistema eléctrico trifásico de 220V/440V según especificaciones técnicas' },
+    { key: 'op_req_water', value: '1 200 Litros' },
+    { key: 'op_req_piping', value: 'to_be_defined_value' },
+    { key: 'op_req_wiring', value: 'to_be_defined_value' },
     { key: 'op_req_gas_tank', value: 'op_req_gas_tank_value_process_start' },
-    { key: 'op_req_gasoline_storage_6days', value: 'Recomendación tanque de 25,000 litros o 2 tanques de 12,000 litros (acero inoxidable o acero al carbón con recubrimiento epóxico)' },
-    { key: 'op_req_diesel_storage_6days', value: 'Recomendación 15,000 litros (acero inoxidable o acero al carbón con recubrimiento epóxico)' },
-    { key: 'op_req_kerosene_storage_6days', value: 'Recomendación 6,000 litros (acero inoxidable o acero al carbón con recubrimiento epóxico)' },
-    { key: 'op_req_paraffin_storage', value: 'Contenedores metálicos reforzados de 200 litros' },
-    { key: 'op_req_coke_storage', value: 'Costales industriales de 25-30 kg (área techada y ventilada)' },
+    { key: 'op_req_gasoline_storage_6days', value: 'Recomendación tanque de 25,000 litros o 2 tanques de 12,000 litros' },
+    { key: 'op_req_diesel_storage_6days', value: 'Recomendación 15,000 litros' },
+    { key: 'op_req_kerosene_storage_6days', value: 'Recomendación 6,000 litros' },
+    { key: 'op_req_paraffin_storage', value: 'to_be_defined_value_containers' },
+    { key: 'op_req_coke_storage', value: 'to_be_defined_value_sacks' },
   ],
   additionalConsiderations: [
       { key: 'add_cons_tank_material', value: 'add_cons_tank_material_value_4k' },
@@ -211,8 +211,9 @@ const PETGAS_4K_DATA: PlantData = {
       }
     ]
   },
-  priceInfoKey: 'petgas_4k_price_info'
+  priceInfoKey: 'petgas_4k_price_info',
 };
+
 
 const PETGAS_4K_2R_DATA: PlantData = {
   id: 'petgas-4k-2r',
@@ -265,13 +266,10 @@ const PETGAS_4K_2R_DATA: PlantData = {
     { key: 'tech_spec_power', value: '10 kW' },
   ],
   maintenance: [
-    'maintenance_daily_inspection',
-    'maintenance_valve_inspection_6months',
-    'maintenance_seal_inspection_3months',
-    'maintenance_connection_inspection_2_4months',
-    'maintenance_gasket_replacement',
-    'maintenance_coke_removal',
-    'maintenance_thermoconverters_cleaning',
+    'petgas_4k_maintenance_item1',
+    'petgas_4k_maintenance_item2',
+    'petgas_4k_maintenance_item3',
+    'petgas_4k_maintenance_item4',
   ],
   consumables: [
     { key: 'consumable_gaskets', value: 'consumable_gaskets_recommendation_4k'}

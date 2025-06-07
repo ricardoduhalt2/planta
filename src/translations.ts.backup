@@ -28,6 +28,7 @@ export const translations: Record<Language, Record<string, any>> = {
     petgas_4k_title: 'Ficha Técnica Planta PETGAS 4K - 1R',
     petgas_4k_2r_card_display_name: 'PETGAS 4K - 2R',
     petgas_4k_2r_title: 'Ficha Técnica Planta PETGAS 4K - 2R',
+    petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
 
     // Plant View
     plantSpecificLogoAlt: 'Logo específico de la planta',
@@ -69,10 +70,89 @@ export const translations: Record<Language, Record<string, any>> = {
     p90_energy_self_sufficiency_content: 'El gas obtenido se recircula al proceso, convirtiendo el sistema en autosuficiente.',
     p90_reactor_process_time_content: 'El reactor se alimenta con plástico triturado, y los hidrocarburos se obtienen mediante control de presión y temperatura en el sistema de destilación, con un tiempo estimado de proceso de 5 a 6 horas según tamaño y ciudad.',
     p90_suitable_plastics_content: 'Los plásticos ideales para el proceso incluyen HDPE, LDPE, PP, PS, y en porcentajes controlados, PS, PET, y PVC.',
-    petgas_4k_process_content: 'La pirólisis plástica se realiza en ausencia de oxígeno, evitando la combustión y la emisión de contaminantes. El sistema convierte los plásticos de su estado sólido a gaseoso, para posteriormente condensarlos en combustibles.',
-    petgas_4k_energy_self_sufficiency_content: 'El gas obtenido se recircula al proceso, convirtiendo el sistema en autosuficiente.',
-    petgas_4k_reactor_process_time_content: 'El reactor se alimenta con plástico triturado, y los hidrocarburos se obtienen mediante control de presión y temperatura en el sistema de destilación, con un tiempo estimado de proceso por ciclo de 8 a 10 horas según tamaño y ciudad.',
-    petgas_4k_suitable_plastics_content: 'Los plásticos ideales para el proceso incluyen HDPE, LDPE, PP, PS, y en porcentajes controlados, PS, PET, y PVC.',
+    // Contenido actualizado para PETGAS 4K - 1R
+    petgas_4k_process_content: 'La pirólisis plástica se realiza en ausencia de oxígeno, evitando la combustión y emisión de contaminantes. El sistema convierte plásticos de estado sólido a gaseoso, posteriormente condensados en combustibles.',
+    petgas_4k_energy_self_sufficiency_content: 'El gas obtenido es reciclado al proceso, haciendo autosuficiente el sistema.',
+    petgas_4k_reactor_process_time_content: 'El reactor se alimenta con plástico triturado. Los hidrocarburos se obtienen mediante control de presión y temperatura en el sistema de destilación. Tiempo estimado por ciclo: 8 a 10 horas (según tamaño y ciudad).',
+    petgas_4k_suitable_plastics_content: 'Ideales: HDPE, LDPE, PP, PS. En porcentajes controlados: PET, PVC.',
+    
+    // Beneficios actualizados
+    petgas_4k_benefit1_title: 'Capacitación Integral',
+    petgas_4k_benefit1_desc: 'Captación estratégica de residuos plásticos en la ciudad donde se monte la planta.',
+    petgas_4k_benefit1_detail1: 'Operación de equipos.',
+    petgas_4k_benefit1_detail2: 'Mantenimiento correctivo y preventivo.',
+    
+    petgas_4k_benefit2_title: 'Instalación y Puesta en Marcha',
+    petgas_4k_benefit2_desc: 'Incluye instalación y puesta en marcha de la planta (no incluye material eléctrico).',
+    
+    petgas_4k_benefit3_title: 'Gestión de Calidad',
+    petgas_4k_benefit3_desc: 'Sistema integrado para control de producción y calidad en procesamiento de hidrocarburos.',
+    petgas_4k_benefit3_detail1: 'Desde identificación de plásticos hasta transformación en combustibles alternativos.',
+    
+    petgas_4k_benefit4_title: 'Seguridad Industrial',
+    petgas_4k_benefit4_desc: 'Capacitación en seguridad para personal operativo según normativa local.',
+    
+    petgas_4k_benefit5_title: 'Soporte Técnico',
+    petgas_4k_benefit5_desc: 'Asistencia técnica y estratégica por parte del equipo especializado.',
+    
+    // Descripción general actualizada
+    petgas_4k_general_desc: 'Tecnología PETGAS que transforma plásticos mediante pirólisis no catalítica. Produce parafina, queroseno, diésel, gasolina, coque y gas. Garantiza operación y buen funcionamiento del sistema.',
+    
+    // Sistema de transformación
+    petgas_4k_reactor_comp_desc1: 'Capacidad: 4,000 kg promedio por día (dependiendo de mezcla utilizada).',
+    petgas_4k_reactor_comp_desc2: 'Ciclos de proceso: 8–10 horas.',
+    petgas_4k_reactor_comp_desc3: 'Calentadores: Quemadores alimentados con gas de retorno, marca PETGAS.',
+    petgas_4k_reactor_comp_desc4: 'Fabricación: Acero, horno externo y base cubierta de concreto refractario.',
+    
+    // Especificaciones técnicas actualizadas
+    petgas_4k_tech_spec_capacity: '4,000 kg por día promedio',
+    petgas_4k_tech_spec_process_duration: '8–10 horas por ciclo',
+    petgas_4k_tech_spec_operators: '3 operadores por ciclo',
+    petgas_4k_tech_spec_burners: '1 quemador Marca PETGAS',
+    petgas_4k_tech_spec_reactor_type: '1 reactor forrado en acero inoxidable',
+    petgas_4k_tech_spec_gasoline_prod: '1,800 litros',
+    petgas_4k_tech_spec_diesel_prod: '1,000 litros',
+    petgas_4k_tech_spec_kerosene_prod: '400 litros',
+    petgas_4k_tech_spec_paraffin_prod: '100 kilogramos',
+    petgas_4k_tech_spec_coke_prod: '140 kilogramos',
+    petgas_4k_tech_spec_lp_gas_consumption: '15 litros por hora (1–2 horas por encendido)',
+    petgas_4k_tech_spec_energy: '48,000 BTU (enfriador, bomba, tablero, sensores)',
+    petgas_4k_tech_spec_power: '5 kW',
+    
+    // Mantenimiento
+    petgas_4k_maintenance_item1: 'Diario: Inspección de sellos, juntas, válvulas y conexiones.',
+    petgas_4k_maintenance_item2: 'Cada 6 meses: Inspección rigurosa de válvulas.',
+    petgas_4k_maintenance_item3: 'Cada 2–4 meses: Revisión y apretado de conexiones.',
+    petgas_4k_maintenance_item4: 'Cambio de empaques: Espirometálicos para reactor y termos conforme recomendación.',
+    petgas_4k_maintenance_item5: 'Limpieza: Retirar coque después de cada 2 encendidos; limpiar termoconvertidores una vez por semana.',
+    
+    // Requerimientos operativos
+    petgas_4k_op_req_water: '1,200 Litros (1 sola vez)',
+    petgas_4k_op_req_piping: 'Por definir',
+    petgas_4k_op_req_wiring: 'Por definir',
+    petgas_4k_op_req_gas_tank: 'Para inicio de proceso',
+    petgas_4k_op_req_gasoline_storage: 'Recomendación: 15,000 litros (6 días)',
+    petgas_4k_op_req_diesel_storage: 'Recomendación: 8,000 litros (6 días)',
+    petgas_4k_op_req_kerosene_storage: 'Recomendación: 4,000 litros (6 días)',
+    petgas_4k_op_req_paraffin_storage: 'Por definir (contenedores reforzados)',
+    petgas_4k_op_req_coke_storage: 'Por definir (costales industriales de 25–30 kg)',
+    
+    // Análisis de producción
+    petgas_4k_prod_analysis_days: '26 días',
+    petgas_4k_prod_analysis_plastic: '4,000 kg por ciclo',
+    petgas_4k_prod_analysis_gasoline: '46,800 litros',
+    petgas_4k_prod_analysis_diesel: '26,000 litros',
+    petgas_4k_prod_analysis_kerosene: '10,400 litros',
+    petgas_4k_prod_analysis_paraffin: '2,600 kg',
+    petgas_4k_prod_analysis_coke: '3,640 kg',
+    petgas_4k_prod_analysis_manpower: '3 personas por turno',
+    
+    // Consideraciones adicionales
+    petgas_4k_additional_considerations1: 'Material de los tanques: Compatible con productos almacenados (acero inoxidable preferentemente o acero al carbón recubiertos con epóxicos para hidrocarburos).',
+    petgas_4k_additional_considerations2: 'Ventilación y seguridad: Válvulas de alivio de presión y sistemas de contención secundaria para evitar fugas.',
+    petgas_4k_additional_considerations3: 'Ubicación: Mantener los tanques en áreas ventiladas, alejadas de fuentes de calor o chispas.',
+    petgas_4k_additional_considerations4: 'Seguridad: Margen del 30% en almacenamiento respecto a la producción diaria.',
+    petgas_4k_additional_considerations5: 'Normatividad: Cumplimiento con NOM-EM-005-ASEA.',
     petgas_700kg_process_content: 'La pirólisis plástica se realiza en ausencia de oxígeno, evitando la combustión y la emisión de contaminantes. El sistema convierte los plásticos de su estado sólido a gaseoso, para posteriormente condensarlos en combustibles.',
     petgas_700kg_energy_self_sufficiency_content: 'Una pequeña cantidad de Gas LP obtenido se utiliza para iniciar el siguiente proceso, convirtiendo el sistema en autosuficiente.',
     petgas_700kg_reactor_process_time_content: 'El reactor se alimenta con plástico triturado, y los hidrocarburos se obtienen mediante control de presión y temperatura en el sistema de destilación, con un tiempo estimado de proceso de 6 a 8 horas según tamaño y ciudad.',
@@ -173,15 +253,6 @@ export const translations: Record<Language, Record<string, any>> = {
     petgas_700kg_maintenance_item1: 'Inspección regular de válvulas cada 6 meses, sellos y juntas cada 3 meses. Conexiones revisadas y apretadas cada 2-4 meses.',
     petgas_700kg_maintenance_item2: 'Cambio de empaques espiro metálicos para reactor y termoconvertidores conforme recomendación.', // Corrected "termos"
     petgas_700kg_maintenance_item3: 'Retirar producto coque después de cada 2 encendidos y realizar limpieza de termoconvertidores una vez por semana.',
-    
-    // New Maintenance Keys for 4K - 2R
-    maintenance_daily_inspection: 'Inspección diaria de sellos, juntas, válvulas y conexiones.',
-    maintenance_valve_inspection_6months: 'Inspección rigurosa de válvulas cada 6 meses.',
-    maintenance_seal_inspection_3months: 'Revisión de sellos y juntas cada 3 meses.',
-    maintenance_connection_inspection_2_4months: 'Conexiones revisadas y apretadas cada 2-4 meses.',
-    maintenance_gasket_replacement: 'Cambio de empaques espiro metálicos para reactor y termoconvertidores según recomendación.',
-    maintenance_coke_removal: 'Retirar producto coque después de cada 2 encendidos.',
-    maintenance_thermoconverters_cleaning: 'Limpieza de termoconvertidores una vez por semana.',
 
     // Consumables
     consumable_gaskets: "Empaques Espiro Metálicos",
@@ -189,7 +260,6 @@ export const translations: Record<Language, Record<string, any>> = {
     consumable_gaskets_recommendation_700kg: "Reactor: cambio cada 2 semanas o 25 encendidos promedio. Termoconvertidores: cambio mensual promedio.",
 
     // Operational Requirement Keys
-    // Operational Requirements
     op_req_water: "Agua Requerida (1 sola vez)",
     op_req_piping: "Tubería",
     op_req_wiring: "Cableado",
@@ -202,33 +272,27 @@ export const translations: Record<Language, Record<string, any>> = {
     op_req_gasoline_storage_6days: "Almacenamiento de Gasolina (6 días)",
     op_req_diesel_storage_6days: "Almacenamiento de Diésel (6 días)",
     op_req_kerosene_storage_6days: "Almacenamiento de Queroseno (6 días)",
+    op_req_space: "Espacio para Operación",
     op_req_gasoline_storage_1week_dual: "Almacenamiento de Gasolina (1 semana, Individual/Doble)",
     op_req_diesel_storage_1week_dual: "Almacenamiento de Diésel (1 semana, Individual/Doble)",
     op_req_kerosene_storage_1week_dual: "Almacenamiento de Queroseno (1 semana, Individual/Doble)",
-    op_req_space: "Espacio Físico Requerido",
-    op_req_ventilation: "Sistema de Ventilación",
-    op_req_floor: "Piso",
-    op_req_drainage: "Drenaje y Contención",
-    op_req_safety: "Equipos de Seguridad",
-    op_req_gas_tank_value_process_start: "Mínimo 100 kg para inicio de proceso",
-    
-    // Placeholder values
     to_be_defined_value: "Por definir",
     to_be_defined_value_containers: "Por definir (contenedores)",
     to_be_defined_value_sacks: "Por definir (costales)",
-    
+    op_req_gas_tank_value_process_start: "Para inicio de proceso",
+
     // Additional Consideration Keys
-    add_cons_tank_material: "Material de Tanques de Almacenamiento",
-    add_cons_ventilation_safety: "Ventilación y Seguridad",
-    add_cons_location: "Ubicación y Espacio",
-    add_cons_safety_margin: "Margen de Seguridad",
-    add_cons_regulations: "Cumplimiento Normativo",
-    add_cons_tank_material_value_p90: "Acero inoxidable o acero al carbón con recubrimiento epóxico para líquidos. Contenedores metálicos para parafina y costales industriales para coque.",
+    add_cons_tank_material: "Material del Tanque",
+    add_cons_ventilation_safety: "Ventilación y Seguridad del Tanque",
+    add_cons_location: "Ubicación del Tanque",
+    add_cons_safety_margin: "Margen de Seguridad de Almacenamiento",
+    add_cons_regulations: "Normatividad Aplicable",
+    add_cons_tank_material_value_p90: "Compatible con productos almacenados (acero inoxidable preferentemente o polietileno de alta densidad para combustibles).",
     add_cons_tank_material_value_4k: "Compatible con productos almacenados (acero inoxidable preferentemente o acero al carbón recubiertos con epóxicos para hidrocarburos).",
-    add_cons_ventilation_safety_value: "Sistema de extracción forzada según normativa NOM-005-STPS-1998. Área de almacenamiento de coque techada y ventilada.",
-    add_cons_location_value: "Área techada de 100 m² y 200 m² de área total. Piso de concreto pulido con canaletas de contención.",
-    add_cons_safety_margin_value: "Se recomienda almacenamiento para al menos 7 días de producción para garantizar continuidad operativa.",
-    add_cons_regulations_value_nom_em_005: "Cumplimiento con NOM-005-ASEA-2016 y NOM-005-STPS-1998 para instalaciones de hidrocarburos.",
+    add_cons_ventilation_safety_value: "Los tanques deben incluir válvulas de alivio de presión y sistemas de contención secundaria para evitar fugas.",
+    add_cons_location_value: "Mantener los tanques en áreas ventiladas, alejadas de fuentes de calor o chispas.",
+    add_cons_safety_margin_value: "Se considera para recomendación de almacenamiento un margen del 30% de acuerdo con la producción diaria.",
+    add_cons_regulations_value_nom_em_005: "Cumplimiento con normativa local NOM-EM-005-ASEA.",
 
     // Production Analysis Table Titles & Concepts
     prod_analysis_table_1_cycle_title: "Producción con 1 Encendido (Ciclo) al Día",
@@ -269,6 +333,7 @@ export const translations: Record<Language, Record<string, any>> = {
     p90_price_info: "Planta P-90: $225,000 USD",
     petgas_4k_price_info: "PETGAS 4K - 1R: $1,000,000 USD",
     petgas_4k_2r_price_info: "PETGAS 4K - 2R: $1,300,000 USD",
+    petgas_700kg_price_info: "Planta 700kg Doble Reactor: $600,000 USD.\nOpción de un solo reactor (R-700 1 Reactor) disponible: $300,000 USD.",
     contactPrompt: "Para más detalles, cotizaciones personalizadas y consultas técnicas, por favor",
     contactLinkText: "contáctenos aquí",
 
@@ -300,7 +365,6 @@ export const translations: Record<Language, Record<string, any>> = {
     heroSelectPrompt: 'Select a plant to dive into its unique technical specifications and benefits.',
     plantImageAltSuffix: 'plant image',
     petgasMainLogoAlt: 'Petgas Main Logo',
-
     // Plant Card Display Names - English
     p90_card_display_name: 'P-90 Plant',
     p90_title: 'Technical Data Sheet P-90 Plant',
@@ -308,10 +372,7 @@ export const translations: Record<Language, Record<string, any>> = {
     petgas_4k_title: 'Technical Data Sheet PETGAS 4K - 1R',
     petgas_4k_2r_card_display_name: 'PETGAS 4K - 2R',
     petgas_4k_2r_title: 'Technical Data Sheet PETGAS 4K - 2R',
-
-    // Plant View
-    plantSpecificLogoAlt: 'Plant specific logo',
-    plantIllustrationAlt: 'Plant model illustration',
+    petgas_700kg_card_display_name: 'PETGAS 700kg Dual Reactor',
     petgasLoadingLogoAlt: 'Petgas Loading Logo',
     
     // Plant Section Titles (from PlantSection enum)
@@ -453,60 +514,51 @@ export const translations: Record<Language, Record<string, any>> = {
     petgas_700kg_maintenance_item2: 'Change of spiral wound gaskets for reactor and thermoconverters as recommended.', // Corrected "therms"
     petgas_700kg_maintenance_item3: 'Remove coke product after every 2 ignitions and clean thermoconverters once a week.',
     
-    // Maintenance Keys for 4K - 2R
-    maintenance_daily_inspection: 'Daily inspection of seals, gaskets, valves, and connections.',
-    maintenance_valve_inspection_6months: 'Thorough valve inspection every 6 months.',
-    maintenance_seal_inspection_3months: 'Seal and gasket inspection every 3 months.',
-    maintenance_connection_inspection_2_4months: 'Connections checked and tightened every 2-4 months.',
-    maintenance_gasket_replacement: 'Replacement of spiral wound gaskets for reactor and thermoconverters as recommended.',
-    maintenance_coke_removal: 'Remove coke product after every 2 ignitions.',
-    maintenance_thermoconverters_cleaning: 'Clean thermoconverters once a week.',
-
     // Consumables
     consumable_gaskets: "Spiral Wound Gaskets",
     consumable_gaskets_recommendation_4k: "Reactor: change every 2 weeks or average 25 ignitions. Thermoconverters: average monthly change.",
     consumable_gaskets_recommendation_700kg: "Reactor: change every 2 weeks or average 25 ignitions. Thermoconverters: average monthly change.",
 
-    // Operational Requirements
+    // Operational Requirement Keys - General
     op_req_water: "Water Required (one time)",
+    op_req_water_p90: "1,200 Liters (one time)",
     op_req_piping: "Piping",
     op_req_wiring: "Wiring",
     op_req_gas_tank: "Gas Tank",
     op_req_gasoline_storage: "Gasoline Storage (1 week)",
     op_req_diesel_storage: "Diesel Storage (1 week)",
     op_req_kerosene_storage: "Kerosene Storage (1 week)",
+    op_req_gasoline_storage_p90: "Recommendation: 500 liters (1 cycle/day)",
+    op_req_diesel_storage_p90: "Recommendation: 300 liters (1 cycle/day)",
+    op_req_kerosene_storage_p90: "Recommendation: 100 liters (1 cycle/day)",
     op_req_paraffin_storage: "Paraffin Storage",
+    op_req_paraffin_storage_p90: "Reinforced containers",
     op_req_coke_storage: "Coke Storage",
+    op_req_coke_storage_p90: "Industrial bags of 25-30 kg",
     op_req_gasoline_storage_6days: "Gasoline Storage (6 days)",
     op_req_diesel_storage_6days: "Diesel Storage (6 days)",
     op_req_kerosene_storage_6days: "Kerosene Storage (6 days)",
+    op_req_space: "Operational Space",
     op_req_gasoline_storage_1week_dual: "Gasoline Storage (1 week, Single/Double)",
     op_req_diesel_storage_1week_dual: "Diesel Storage (1 week, Single/Double)",
     op_req_kerosene_storage_1week_dual: "Kerosene Storage (1 week, Single/Double)",
-    op_req_space: "Required Physical Space",
-    op_req_ventilation: "Ventilation System",
-    op_req_floor: "Flooring",
-    op_req_drainage: "Drainage and Containment",
-    op_req_safety: "Safety Equipment",
-    op_req_gas_tank_value_process_start: "Minimum 100 kg for process start",
-    
-    // Placeholder values
     to_be_defined_value: "To be defined",
     to_be_defined_value_containers: "To be defined (containers)",
     to_be_defined_value_sacks: "To be defined (sacks)",
-    
+    op_req_gas_tank_value_process_start: "For process initiation",
+
     // Additional Consideration Keys
-    add_cons_tank_material: "Storage Tank Material",
-    add_cons_ventilation_safety: "Ventilation and Safety",
-    add_cons_location: "Location and Space",
-    add_cons_safety_margin: "Safety Margin",
-    add_cons_regulations: "Regulatory Compliance",
-    add_cons_tank_material_value_p90: "Stainless steel or epoxy-coated carbon steel for liquids. Metal containers for paraffin and industrial sacks for coke.",
-    add_cons_tank_material_value_4k: "Stainless steel or epoxy-coated carbon steel for hydrocarbons.",
-    add_cons_ventilation_safety_value: "Forced extraction system according to NOM-005-STPS-1998 standard. Covered and ventilated coke storage area.",
-    add_cons_location_value: "Covered area of 100 m² and 200 m² total area. Polished concrete floor with containment channels.",
-    add_cons_safety_margin_value: "Storage for at least 7 days of production is recommended to ensure operational continuity.",
-    add_cons_regulations_value_nom_em_005: "Compliance with NOM-005-ASEA-2016 and NOM-005-STPS-1998 for hydrocarbon facilities.",
+    add_cons_tank_material: "Tank Material",
+    add_cons_ventilation_safety: "Tank Ventilation and Safety",
+    add_cons_location: "Tank Location",
+    add_cons_safety_margin: "Storage Safety Margin",
+    add_cons_regulations: "Applicable Regulations",
+    add_cons_tank_material_value_p90: "Compatible with stored products (stainless steel preferably or high-density polyethylene for fuels).",
+    add_cons_tank_material_value_4k: "Compatible with stored products (stainless steel preferably or carbon steel coated with epoxies for hydrocarbons).",
+    add_cons_ventilation_safety_value: "Tanks must include pressure relief valves and secondary containment systems to prevent leaks.",
+    add_cons_location_value: "Keep tanks in ventilated areas, away from heat sources or sparks.",
+    add_cons_safety_margin_value: "A 30% storage margin based on daily production is considered for recommendation.",
+    add_cons_regulations_value_nom_em_005: "Compliance with local regulations NOM-EM-005-ASEA.",
 
     // Production Analysis Table Titles & Concepts
     prod_analysis_table_1_cycle_title: "Production with 1 Ignition (Cycle) per Day",
@@ -547,6 +599,7 @@ export const translations: Record<Language, Record<string, any>> = {
     p90_price_info: "P-90 Plant: $225,000 USD",
     petgas_4k_price_info: "PETGAS 4K - 1R: $1,000,000 USD",
     petgas_4k_2r_price_info: "PETGAS 4K - 2R: $1,300,000 USD",
+    petgas_700kg_price_info: "700kg Double Reactor Plant: $600,000 USD.\nSingle reactor option (R-700 1 Reactor) available: $300,000 USD.",
     contactPrompt: "For more details, custom quotes, and technical inquiries, please",
     contactLinkText: "contact us here",
     

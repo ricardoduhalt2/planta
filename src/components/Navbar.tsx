@@ -57,10 +57,14 @@ const Navbar: React.FC<NavbarProps> = ({ plants, selectedPlantId, onSelectPlant,
           <button
             onClick={toggleLanguage}
             aria-label={language === 'es' ? t('switchToEnglish') : t('switchToSpanish')}
-            className="glass-button text-xs sm:text-sm"
+            className="glass-button w-10 h-10 flex items-center justify-center text-lg rounded-full hover:bg-gray-700/50 transition-colors duration-200 border border-gray-600 hover:border-[#009A44] focus:outline-none focus:ring-2 focus:ring-[#8CC63F] focus:ring-opacity-50"
             title={language === 'es' ? t('switchToEnglish') : t('switchToSpanish')}
           >
-            {language === 'es' ? 'EN' : 'ES'}
+            {language === 'es' ? (
+              <span role="img" aria-label="English" className="hover:scale-110 transition-transform">🇬🇧</span>
+            ) : (
+              <span role="img" aria-label="Español" className="hover:scale-110 transition-transform">🇲🇽</span>
+            )}
           </button>
         </div>
       </div>

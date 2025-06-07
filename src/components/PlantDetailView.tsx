@@ -87,7 +87,9 @@ const DetailTable: React.FC<TableProps> = ({ data, headersKey, striped = true })
             return (
               <tr key={t(rowKeyOrConcept) + index} className={striped && index % 2 === 0 ? 'bg-slate-50' : `bg-[#FFFFFF] hover:bg-slate-100 transition-colors`}>
                 <td className={`px-6 py-4 whitespace-normal text-sm font-medium text-slate-800`}>{t(rowKeyOrConcept)}</td>
-                <td className="px-6 py-4 whitespace-pre-line text-sm text-slate-700">{rowValue}</td>
+                <td className="px-6 py-4 whitespace-pre-line text-sm text-slate-700">
+                  {typeof rowValue === 'string' && rowValue.startsWith('op_req_') ? t(rowValue) : rowValue}
+                </td>
               </tr>
             );
           })}
@@ -351,7 +353,32 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
       {plant.consumables && plant.consumables.length > 0 && (
         <AnimatedSectionCard titleKey={PlantSection.CONSUMABLES} iconType={PlantSection.CONSUMABLES}>
-           <DetailTable data={plant.consumables} headersKey={[CommonText.TABLE_HEADER_CONSUMABLE, CommonText.TABLE_HEADER_RECOMMENDATION]} />
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-slate-100">
+                <tr>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-1/3">
+                    {t(CommonText.TABLE_HEADER_CONSUMABLE)}
+                  </th>
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-2/3">
+                    {t(CommonText.TABLE_HEADER_RECOMMENDATION)}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-[#FFFFFF] divide-y divide-gray-200">
+                {plant.consumables.map((item, index) => (
+                  <tr key={`${item.key}-${index}`} className={index % 2 === 0 ? 'bg-slate-50' : 'bg-[#FFFFFF] hover:bg-slate-100 transition-colors'}>
+                    <td className="px-6 py-4 whitespace-normal text-sm font-medium text-slate-800">
+                      {t(item.key)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-pre-line text-sm text-slate-700">
+                      {t(item.value)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </AnimatedSectionCard>
       )}
       

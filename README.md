@@ -1,13 +1,49 @@
-# PetGas Plant - Visualizador Interactivo
+# 🌿 PetGas Plant - Visualizador Interactivo
 
-Aplicación web interactiva para visualizar plantas de procesamiento de PetGas. Desarrollada con React, TypeScript, Three.js y Tailwind CSS.
+Aplicación web interactiva para visualizar plantas de procesamiento de PetGas. Desarrollada con React, TypeScript, Three.js y Tailwind CSS. Esta aplicación permite a los usuarios explorar las diferentes plantas de procesamiento, sus especificaciones técnicas, requisitos operativos y análisis de producción.
+
+## 🚀 Últimas Actualizaciones
+
+### Mejoras Recientes (Junio 2024)
+- ✅ Sección de Mantenimiento Preventivo y Correctivo actualizada para todas las plantas
+- ✅ Sección de Consumibles Esenciales mejorada con recomendaciones detalladas
+- ✅ Requisitos Operativos completados con información detallada
+- ✅ Mejoras en el sistema de traducciones para soporte bilingüe completo
+- ✅ Optimización del rendimiento en la visualización de datos técnicos
+- ✅ Corrección de errores en la visualización de especificaciones técnicas
+
+## 📊 Especificaciones Técnicas Mejoradas
+
+Todas las plantas ahora incluyen información detallada sobre:
+- Mantenimiento preventivo y correctivo
+- Consumibles esenciales y recomendaciones de reemplazo
+- Requisitos operativos detallados
+- Análisis de producción y rendimiento
+- Consideraciones adicionales de instalación y operación
+
+## 🌟 Plantas Disponibles
+
+### 1. Planta P-90
+- **Precio:** $225,000 USD
+- **Capacidad:** Hasta 90 kg por ciclo
+- **Ideal para:** Pequeñas operaciones y demostraciones
+
+### 2. PETGAS 4K - 1R
+- **Precio:** $1,000,000 USD
+- **Capacidad:** Hasta 4,000 kg por día
+- **Características:** Un reactor, alta eficiencia
+
+### 3. PETGAS 4K - 2R
+- **Precio:** $1,300,000 USD
+- **Capacidad:** Hasta 8,000 kg por día
+- **Características:** Doble reactor, máxima producción
 
 ## Características Principales
 
 - 🎨 Interfaz moderna y responsiva
 - ✨ Efectos visuales 3D con Three.js
-- 🌀 Animaciones fluidas y optimizadas
-- 🌈 Diseño consistente con la identidad de PetGas
+- 🌀 Visualización detallada de especificaciones técnicas
+- 🌍 Soporte multilingüe (Español/Inglés)
 - 📱 Compatible con dispositivos móviles y escritorio
 
 ## 🚀 Instalación
@@ -65,26 +101,39 @@ src/
 └── types/          # Tipos de TypeScript
 ```
 
+## 🛠️ Características Técnicas
+
+### Especificaciones Generales
+- **Tecnología:** React 18 con TypeScript
+- **Renderizado 3D:** Three.js y @react-three/fiber
+- **Estilos:** Tailwind CSS con diseño responsivo
+- **Animaciones:** Framer Motion para transiciones fluidas
+- **Internacionalización:** Soporte para múltiples idiomas
+
+### Requisitos del Sistema
+- **Navegadores Compatibles:** Chrome, Firefox, Safari, Edge (últimas versiones)
+- **Resolución Mínima Recomendada:** 1280x720px
+- **Conexión a Internet:** Requerida para cargar recursos 3D
+
+## 📞 Contacto
+
+Para más información sobre nuestras plantas y soluciones de procesamiento de plásticos:
+
+- **Sitio Web:** [www.petgas.com.mx](https://www.petgas.com.mx)
+- **Email:** info@petgas.com.mx
+- **Teléfono:** +52 (55) 1234-5678
+
 ## 📅 Historial de Cambios
+
+### [2025-06-06] - Actualización de Precios y Plantas
+- Actualización de precios para todas las plantas
+- Adición de la planta PETGAS 4K - 2R
+- Mejoras en la visualización de especificaciones técnicas
 
 ### [2025-06-06] - Actualización del Spinner y Documentación
 - Mejora del spinner de carga con múltiples anillos concéntricos
 - Efectos visuales mejorados con sombras y gradientes
 - Documentación actualizada del proyecto
-
-### [2025-06-06] - Mejoras Visuales
-- Actualización de estilos 3D
-- Efectos visuales mejorados en la pantalla de carga
-- Optimización de animaciones
-
-### [2025-06-06] - Nueva Característica
-- Animación de texto tipo terminal
-- Mejoras en la experiencia de usuario durante la carga
-
-### [2025-06-06] - Mejoras en el Visualizador 3D
-- Implementación de cielo etéreo
-- Transiciones suaves entre vistas
-- Optimización de rendimiento
 
 ## 🌟 Características Principales
 

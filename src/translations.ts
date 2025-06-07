@@ -273,6 +273,9 @@ export const translations: Record<Language, Record<string, any>> = {
     contactLinkText: "contáctenos aquí",
 
     // Charts
+    productionChartsTitle: 'Análisis de Producción',
+    liquidProductionTitle: 'Producción de Líquidos',
+    solidProductionTitle: 'Producción de Sólidos',
     chartLiquidProdTitle: "Producción Estimada de Líquidos por Ciclo",
     chartSolidProdTitle: "Producción Estimada de Sólidos por Ciclo",
     liters: "Litros",

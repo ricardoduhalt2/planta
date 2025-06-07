@@ -99,10 +99,10 @@ const DetailTable: React.FC<TableProps> = ({ data, headersKey, striped = true })
                 key={t(rowKeyOrConcept) + index} 
                 className={`${striped && index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors`}
               >
-                <td className={`px-6 py-4 whitespace-normal text-sm font-medium text-gray-100`}>
+                <td className={`px-6 py-4 whitespace-normal text-sm font-medium text-white`}>
                   {t(rowKeyOrConcept)}
                 </td>
-                <td className="px-6 py-4 whitespace-pre-line text-sm text-gray-300">
+                <td className="px-6 py-4 whitespace-pre-line text-sm text-gray-100">
                   {typeof rowValue === 'string' && rowValue.startsWith('op_req_') ? t(rowValue) : rowValue}
                 </td>
               </tr>
@@ -115,14 +115,32 @@ const DetailTable: React.FC<TableProps> = ({ data, headersKey, striped = true })
 };
 
 const parseProductionValue = (valueString: string): { amount: number; unit: string } | null => {
-  const match = valueString.match(/([\d.,]+)\s*(litros|kilogramos|kg)/i);
-  if (match && match[1]) {
-    const amount = parseFloat(match[1].replace(',', '.')); 
-    const unit = match[2] ? match[2].toLowerCase() : '';
-    if (!isNaN(amount)) {
-      return { amount, unit: unit.startsWith('kg') ? 'kilograms' : unit };
+  // Patrones para detectar números con unidades en español o inglés
+  const patterns = [
+    // Formato: 45 litros, 2.5 kilogramos, etc.
+    { regex: /([\d.,]+)\s*(litros?|kilos?|kgs?|kilogramos?)/i, 
+      unitMapper: (u: string) => u.toLowerCase().startsWith('kg') || u.toLowerCase().startsWith('kilo') ? 'kilograms' : 'liters' },
+    // Formato: 45 L, 2.5 kg, etc.
+    { regex: /([\d.,]+)\s*([LlKk][Gg]?)\b/, 
+      unitMapper: (u: string) => u.toLowerCase() === 'l' ? 'liters' : 'kilograms' },
+    // Solo número, asumir litros por defecto
+    { regex: /([\d.,]+)/, 
+      unitMapper: () => 'liters' }
+  ];
+
+  for (const { regex, unitMapper } of patterns) {
+    const match = valueString.match(regex);
+    if (match && match[1]) {
+      // Reemplazar coma decimal por punto para asegurar el parseo correcto
+      const amount = parseFloat(match[1].replace(',', '.'));
+      if (!isNaN(amount)) {
+        const unit = match[2] ? unitMapper(match[2]) : 'liters';
+        return { amount, unit };
+      }
     }
   }
+  
+  console.warn(`No se pudo analizar el valor de producción: "${valueString}"`);
   return null;
 };
 
@@ -132,111 +150,245 @@ const solidProductKeys = ['tech_spec_paraffin_prod', 'tech_spec_coke_prod'];
 const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
   const { t } = useLanguage();
 
+  // Procesar datos de producción líquida
   const liquidProductionData = plant.technicalSpecs
     .filter(spec => liquidProductKeys.includes(spec.key))
-    .map(spec => ({
-      label: t(spec.key)
-               .replace(t('tech_spec_estimated_production_prefix'), '')
-               .replace(t('tech_spec_per_cycle_suffix'), '')
-               .trim(),
-      value: parseProductionValue(spec.value)?.amount || 0,
-    }))
+    .map(spec => {
+      const parsedValue = parseProductionValue(spec.value);
+      console.log(`Procesando ${spec.key}:`, {
+        valorOriginal: spec.value,
+        valorParseado: parsedValue,
+        etiqueta: t(spec.key)
+      });
+      
+      return {
+        label: t(spec.key)
+                 .replace(t('tech_spec_estimated_production_prefix'), '')
+                 .replace(t('tech_spec_per_cycle_suffix'), '')
+                 .trim(),
+        value: parsedValue?.amount || 0,
+        rawValue: spec.value,
+        parsedValue
+      };
+    })
     .filter(item => item.value > 0);
 
+  console.log('Datos de producción líquida procesados:', liquidProductionData);
+
+  // Procesar datos de producción sólida
   const solidProductionData = plant.technicalSpecs
     .filter(spec => solidProductKeys.includes(spec.key))
-    .map(spec => ({
-      label: t(spec.key)
-              .replace(t('tech_spec_estimated_production_prefix'), '')
-              .replace(t('tech_spec_per_cycle_suffix'), '')
-              .trim(),
-      value: parseProductionValue(spec.value)?.amount || 0,
-    }))
+    .map(spec => {
+      const parsedValue = parseProductionValue(spec.value);
+      return {
+        label: t(spec.key)
+                .replace(t('tech_spec_estimated_production_prefix'), '')
+                .replace(t('tech_spec_per_cycle_suffix'), '')
+                .trim(),
+        value: parsedValue?.amount || 0,
+        rawValue: spec.value,
+        parsedValue
+      };
+    })
     .filter(item => item.value > 0);
+    
+  console.log('Datos de producción sólida procesados:', solidProductionData);
 
-  const chartOptionsBase = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { 
-        display: true, 
-        position: 'bottom' as 'bottom',
-        labels: { 
-          font: { family: 'Inter', size: 12, weight: '500' },
-          color: PETGAS_DARK_GREY, 
-          boxWidth: 12,
-          padding: 15,
-        }
-      },
-      tooltip: {
-        backgroundColor: 'rgba(0,0,0,0.85)',
-        titleFont: { family: 'Inter', size: 14, weight: 'bold' },
-        bodyFont: { family: 'Inter', size: 12 },
-        padding: 10,
-        cornerRadius: 8,
-        displayColors: true,
-        boxPadding: 4,
-      }
-    },
-    scales: { 
-      x: { 
-        grid: { display: false },
-        ticks: { font: { family: 'Inter', size: 11 }, color: PETGAS_MEDIUM_GREY } 
-      },
-      y: { 
-        beginAtZero: true, 
-        grid: { color: PETGAS_LIGHT_GREY, drawBorder: false }, 
-        ticks: { font: { family: 'Inter', size: 11 }, color: PETGAS_MEDIUM_GREY, padding: 10 }, 
-        title: { display: true, font: { family: 'Inter', size: 12, weight: '600' }, color: PETGAS_DARK_GREY, padding: { top: 0, bottom: 10 } } 
-      } 
-    },
-    animation: {
-      duration: 1000,
-      easing: 'easeInOutQuart'
-    }
-  };
-  
+  // Configuración para los datos de productos líquidos
   const liquidChartConfig = {
-    type: 'bar',
+    type: 'pie',
     data: {
       labels: liquidProductionData.map(d => d.label),
       datasets: [{
-        label: t('liters'),
         data: liquidProductionData.map(d => d.value),
-        backgroundColor: MODERN_BLUE, 
-        borderColor: MODERN_BLUE,
+        backgroundColor: [
+          'rgba(0, 154, 68, 0.8)',     // Verde PETGAS
+          'rgba(140, 198, 63, 0.8)',   // Verde claro PETGAS
+          'rgba(0, 123, 255, 0.8)',    // Azul
+          'rgba(40, 167, 69, 0.8)',    // Verde
+          'rgba(23, 162, 184, 0.8)',   // Cian
+        ],
+        borderColor: 'rgba(0, 0, 0, 0.3)',
         borderWidth: 1,
-        borderRadius: 5,
-        barThickness: 'flex' as 'flex',
-        maxBarThickness: 50,
+        hoverOffset: 15,
+        hoverBorderWidth: 2,
+        hoverBorderColor: '#ffffff',
       }]
     },
     options: {
-      ...chartOptionsBase,
-      plugins: { ...chartOptionsBase.plugins, title: { display: true, text: t('chartLiquidProdTitle'), font: { family: 'Inter', size: 18, weight: 'bold' }, color: PETGAS_DARK_GREY, padding: {bottom: 20} } },
-      scales: { ...chartOptionsBase.scales, y: { ...chartOptionsBase.scales.y, title: {...chartOptionsBase.scales.y.title, text: t('liters')} } }
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: t('chartLiquidProdTitle'),
+          color: '#f9fafb',
+          font: {
+            family: 'Inter, sans-serif',
+            size: 18,
+            weight: 'bold'
+          },
+          padding: { bottom: 20 }
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#f3f4f6',
+            font: {
+              family: 'Inter, sans-serif',
+              size: 12,
+              weight: '500'
+            },
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'circle'
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(17, 24, 39, 0.95)',
+          titleFont: { family: 'Inter, sans-serif', size: 14, weight: 'bold' },
+          bodyFont: { family: 'Inter, sans-serif', size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: true,
+          boxPadding: 6,
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 1,
+          callbacks: {
+            label: function(context: any) {
+              let label = context.label || '';
+              if (label) label += ': ';
+              if (context.parsed !== null) {
+                label += new Intl.NumberFormat('es-MX').format(context.parsed) + ' L';
+              }
+              return label;
+            }
+          }
+        },
+        datalabels: {
+          color: '#ffffff',
+          font: {
+            weight: 'bold',
+            size: 12
+          },
+          formatter: (value: number) => {
+            return new Intl.NumberFormat('es-MX').format(value) + ' L';
+          }
+        }
+      },
+      elements: {
+        arc: {
+          borderWidth: 2,
+          borderColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeOutQuart',
+        animateScale: true,
+        animateRotate: true
+      },
+      cutout: '65%',
+      radius: '80%'
     }
   };
-  
+
+  // Configuración para los datos de productos sólidos
   const solidChartConfig = {
-    type: 'bar',
+    type: 'pie',
     data: {
       labels: solidProductionData.map(d => d.label),
       datasets: [{
-        label: t('kilograms'),
         data: solidProductionData.map(d => d.value),
-        backgroundColor: MODERN_TEAL,
-        borderColor: MODERN_TEAL,
+        backgroundColor: [
+          'rgba(253, 126, 20, 0.8)',   // Naranja
+          'rgba(111, 66, 193, 0.8)',   // Púrpura
+          'rgba(220, 53, 69, 0.8)',    // Rojo
+          'rgba(255, 193, 7, 0.8)',    // Amarillo
+          'rgba(13, 110, 253, 0.8)',   // Azul
+        ],
+        borderColor: 'rgba(0, 0, 0, 0.3)',
         borderWidth: 1,
-        borderRadius: 5,
-        barThickness: 'flex' as 'flex',
-        maxBarThickness: 50,
+        hoverOffset: 15,
+        hoverBorderWidth: 2,
+        hoverBorderColor: '#ffffff',
       }]
     },
     options: {
-      ...chartOptionsBase,
-      plugins: { ...chartOptionsBase.plugins, title: { display: true, text: t('chartSolidProdTitle'), font: { family: 'Inter', size: 18, weight: 'bold' }, color: PETGAS_DARK_GREY, padding: {bottom: 20} } },
-      scales: { ...chartOptionsBase.scales, y: { ...chartOptionsBase.scales.y, title: {...chartOptionsBase.scales.y.title, text: t('kilograms')} } }
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: t('chartSolidProdTitle'),
+          color: '#f9fafb',
+          font: {
+            family: 'Inter, sans-serif',
+            size: 18,
+            weight: 'bold'
+          },
+          padding: { bottom: 20 }
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#f3f4f6',
+            font: {
+              family: 'Inter, sans-serif',
+              size: 12,
+              weight: '500'
+            },
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: 'circle'
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(17, 24, 39, 0.95)',
+          titleFont: { family: 'Inter, sans-serif', size: 14, weight: 'bold' },
+          bodyFont: { family: 'Inter, sans-serif', size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: true,
+          boxPadding: 6,
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 1,
+          callbacks: {
+            label: function(context: any) {
+              let label = context.label || '';
+              if (label) label += ': ';
+              if (context.parsed !== null) {
+                label += new Intl.NumberFormat('es-MX').format(context.parsed) + ' kg';
+              }
+              return label;
+            }
+          }
+        },
+        datalabels: {
+          color: '#ffffff',
+          font: {
+            weight: 'bold',
+            size: 12
+          },
+          formatter: (value: number) => {
+            return new Intl.NumberFormat('es-MX').format(value) + ' kg';
+          }
+        }
+      },
+      elements: {
+        arc: {
+          borderWidth: 2,
+          borderColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeOutQuart',
+        animateScale: true,
+        animateRotate: true
+      },
+      cutout: '65%',
+      radius: '80%'
     }
   };
 
@@ -280,9 +432,9 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
         <AnimatedSectionCard titleKey={PlantSection.GENERALITIES} iconType={PlantSection.GENERALITIES}>
           <div className="space-y-5">
             {plant.generalities.map(item => (
-              <div key={item.id} className={`p-5 border-l-4 border-[#A0D468] bg-slate-50 rounded-r-lg shadow-sm hover:shadow-md transition-shadow`}>
-                <h3 className={`text-xl font-semibold text-[#009A44] mb-1.5`}>{t(item.titleKey)}</h3>
-                <p className="text-slate-700 leading-relaxed">{t(item.contentKey)}</p>
+              <div key={item.id} className={`p-5 border-l-4 border-[#A0D468] bg-white/10 backdrop-blur-sm rounded-r-lg shadow-sm hover:shadow-md transition-all duration-300`}>
+                <h3 className={`text-xl font-semibold text-white mb-1.5`}>{t(item.titleKey)}</h3>
+                <p className="text-gray-100 leading-relaxed">{t(item.contentKey)}</p>
               </div>
             ))}
           </div>
@@ -293,11 +445,11 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
         <AnimatedSectionCard titleKey={PlantSection.BENEFITS} iconType={PlantSection.BENEFITS}>
           <div className="grid md:grid-cols-2 gap-x-8 gap-y-6">
             {plant.benefits.map(benefit => (
-              <div key={benefit.id} className="bg-slate-50 p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200">
-                <h3 className={`text-xl font-bold text-[#009A44] mb-2`}>{t(benefit.title)}</h3>
-                <p className="text-slate-700 mb-2.5 text-sm leading-relaxed">{t(benefit.description)}</p>
+              <div key={benefit.id} className="bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 border border-white/10">
+                <h3 className={`text-xl font-bold text-white mb-2`}>{t(benefit.title)}</h3>
+                <p className="text-gray-100 mb-2.5 text-sm leading-relaxed">{t(benefit.description)}</p>
                 {benefit.details && benefit.details.length > 0 && (
-                  <ul className="list-disc list-inside text-sm text-slate-600 space-y-1.5 pl-2">
+                  <ul className="list-disc list-inside text-sm text-gray-200 space-y-1.5 pl-2">
                     {benefit.details.map((detailKey, i) => <li key={i}>{t(detailKey)}</li>)}
                   </ul>
                 )}
@@ -309,7 +461,12 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
       {plant.generalDescriptionKey && (
          <AnimatedSectionCard titleKey={PlantSection.GENERAL_DESCRIPTION} iconType={PlantSection.GENERAL_DESCRIPTION}>
-            <p className="text-lg text-slate-700 leading-relaxed">{t(plant.generalDescriptionKey)}</p>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-lg text-gray-100 leading-relaxed mb-4">{t(plant.generalDescriptionKey)}</p>
+              {plant.generalDescriptionKey2 && (
+                <p className="text-gray-200 leading-relaxed">{t(plant.generalDescriptionKey2)}</p>
+              )}
+            </div>
         </AnimatedSectionCard>
       )}
 
@@ -317,12 +474,12 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
         <AnimatedSectionCard titleKey={plant.transformationSystem.titleKey} iconType={PlantSection.TRANSFORMATION_SYSTEM}>
            <div className="space-y-6">
             {plant.transformationSystem.components.map(component => (
-              <div key={component.id} className="p-5 border rounded-xl shadow-md bg-slate-50 hover:shadow-lg transition-shadow">
-                <h4 className={`text-lg font-semibold text-[#009A44] mb-2`}>{t(component.name)}</h4>
+              <div key={component.id} className="p-5 border border-white/10 rounded-xl shadow-md bg-white/10 hover:shadow-lg transition-all duration-300 backdrop-blur-sm">
+                <h4 className={`text-lg font-semibold text-white mb-2`}>{t(component.name)}</h4>
                 {typeof component.description === 'string' ? (
-                  <p className="text-slate-700 text-sm leading-relaxed">{t(component.description)}</p>
+                  <p className="text-gray-100 text-sm leading-relaxed">{t(component.description)}</p>
                 ) : (
-                  <ul className="list-disc list-inside text-slate-700 space-y-1.5 text-sm">
+                  <ul className="list-disc list-inside text-gray-200 space-y-1.5 text-sm">
                     {component.description.map((descKey, i) => <li key={i}>{t(descKey)}</li>)}
                   </ul>
                 )}
@@ -335,14 +492,34 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
       {plant.technicalSpecs && plant.technicalSpecs.length > 0 && (
         <AnimatedSectionCard titleKey={PlantSection.TECHNICAL_SPECS} iconType={PlantSection.TECHNICAL_SPECS}>
           <DetailTable data={plant.technicalSpecs} headersKey={[CommonText.TABLE_HEADER_CHARACTERISTIC, CommonText.TABLE_HEADER_SPECIFICATION]} />
-           {liquidProductionData.length > 0 && (
-            <div className="mt-10 h-80 md:h-96 lg:h-[450px]">
-              <ChartComponent chartId={`${plant.id}-liquid-prod-chart`} config={liquidChartConfig} />
+        </AnimatedSectionCard>
+      )}
+
+      {/* Gráficos de producción */}
+      {(liquidProductionData.length > 0 || solidProductionData.length > 0) && (
+        <AnimatedSectionCard titleKey="productionChartsTitle" iconType="chart">
+          {liquidProductionData.length > 0 && (
+            <div className="mb-10">
+              <h3 className="text-xl font-semibold mb-4 text-white">{t('liquidProductionTitle')}</h3>
+              <div className="h-80 md:h-96 lg:h-[450px]">
+                <ChartComponent 
+                  chartId={`${plant.id}-liquid-prod-chart`} 
+                  config={liquidChartConfig} 
+                  className="w-full h-full"
+                />
+              </div>
             </div>
           )}
           {solidProductionData.length > 0 && (
-            <div className="mt-10 h-80 md:h-96 lg:h-[450px]">
-              <ChartComponent chartId={`${plant.id}-solid-prod-chart`} config={solidChartConfig} />
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-white">{t('solidProductionTitle')}</h3>
+              <div className="h-80 md:h-96 lg:h-[450px]">
+                <ChartComponent 
+                  chartId={`${plant.id}-solid-prod-chart`} 
+                  config={solidChartConfig} 
+                  className="w-full h-full"
+                />
+              </div>
             </div>
           )}
         </AnimatedSectionCard>

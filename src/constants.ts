@@ -123,7 +123,7 @@ const PETGAS_4K_DATA: PlantData = {
   cardDisplayNameKey: 'petgas_4k_card_display_name',
   titleKey: 'petgas_4k_title', // Translation key for the title
   logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg3.jpg', // Updated 4K-1R plant image
+  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2025/06/PLANTA-R1.jpeg', // Updated 4K-1R plant image
   generalities: [
     { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'petgas_4k_process_content' },
     { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'petgas_4k_energy_self_sufficiency_content' },
@@ -221,7 +221,7 @@ const PETGAS_4K_2R_DATA: PlantData = {
   cardDisplayNameKey: 'petgas_4k_2r_card_display_name',
   titleKey: 'petgas_4k_2r_title',
   logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg4.jpg',
+  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2023/04/plantaimg3.jpg',
   generalities: [
     { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'petgas_4k_process_content' },
     { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'petgas_4k_energy_self_sufficiency_content' },

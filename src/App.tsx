@@ -8,6 +8,7 @@ import { ALL_PLANTS_DATA } from './constants';
 import { useLanguage } from './contexts/LanguageContext';
 import LoadingScreen from './components/LoadingScreen';
 import { FloatingParticles } from './components/LoadingScreen';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 // Importar estilos de Tailwind CSS
 import './styles/main.css';
@@ -135,7 +136,8 @@ const App: React.FC = () => {
           )}
         </main>
         <Footer />
-      </div>
+      <ScrollToTopButton />
+    </div>
     </div>
   );
 };

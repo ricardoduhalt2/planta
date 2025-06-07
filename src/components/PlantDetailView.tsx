@@ -42,17 +42,27 @@ interface AnimatedSectionProps {
   additionalTitleClassName?: string;
 }
 
-const AnimatedSectionCard: React.FC<AnimatedSectionProps> = ({ titleKey, children, bgColor = 'bg-[#FFFFFF]', textColor = 'text-[#1f2937]', iconType, additionalTitleClassName = '' }) => {
+const AnimatedSectionCard: React.FC<AnimatedSectionProps> = ({ titleKey, children, iconType, additionalTitleClassName = '' }) => {
   const { t } = useLanguage();
   const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, triggerOnce: true });
 
   return (
-    <div ref={ref} className={`fade-in ${isVisible ? 'visible' : ''} ${bgColor} ${textColor} p-6 md:p-8 rounded-2xl shadow-xl mb-10 overflow-hidden`}>
-      <h2 className={`text-3xl font-bold mb-6 border-b-2 border-[#A0D468] pb-3 flex items-center animated-gradient-title ${additionalTitleClassName}`}>
+    <div 
+      ref={ref} 
+      className={`fade-in ${isVisible ? 'visible' : ''} backdrop-blur-md bg-white/5 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 p-6 md:p-8 rounded-2xl mb-10 overflow-hidden`}
+      style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+      }}
+    >
+      <h2 className={`text-3xl font-bold mb-6 border-b-2 border-[#A0D468] pb-3 flex items-center text-white ${additionalTitleClassName}`}>
         {iconType && <SectionIcon type={iconType} />}
         {t(titleKey)}
       </h2>
-      {children}
+      <div className="text-gray-200">
+        {children}
+      </div>
     </div>
   );
 };
@@ -68,26 +78,31 @@ const DetailTable: React.FC<TableProps> = ({ data, headersKey, striped = true })
   const { t } = useLanguage(); 
   
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className={`bg-slate-100`}>
+    <div className="overflow-x-auto rounded-lg border border-white/10">
+      <table className="min-w-full divide-y divide-white/10">
+        <thead className={`bg-white/5`}>
           <tr>
-            <th scope="col" className={`px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-1/3`}>
+            <th scope="col" className={`px-6 py-4 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider w-1/3`}>
               {t(headersKey[0])} 
             </th>
-            <th scope="col" className={`px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-2/3`}>
+            <th scope="col" className={`px-6 py-4 text-left text-xs font-semibold text-gray-200 uppercase tracking-wider w-2/3`}>
               {t(headersKey[1])}
             </th>
           </tr>
         </thead>
-        <tbody className={`bg-[#FFFFFF] divide-y divide-gray-200`}>
+        <tbody className={`divide-y divide-white/10`}>
           {data.map((item, index) => {
             const rowKeyOrConcept = 'key' in item ? item.key : item.concept;
             const rowValue = 'value' in item ? item.value : item.specification;
             return (
-              <tr key={t(rowKeyOrConcept) + index} className={striped && index % 2 === 0 ? 'bg-slate-50' : `bg-[#FFFFFF] hover:bg-slate-100 transition-colors`}>
-                <td className={`px-6 py-4 whitespace-normal text-sm font-medium text-slate-800`}>{t(rowKeyOrConcept)}</td>
-                <td className="px-6 py-4 whitespace-pre-line text-sm text-slate-700">
+              <tr 
+                key={t(rowKeyOrConcept) + index} 
+                className={`${striped && index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors`}
+              >
+                <td className={`px-6 py-4 whitespace-normal text-sm font-medium text-gray-100`}>
+                  {t(rowKeyOrConcept)}
+                </td>
+                <td className="px-6 py-4 whitespace-pre-line text-sm text-gray-300">
                   {typeof rowValue === 'string' && rowValue.startsWith('op_req_') ? t(rowValue) : rowValue}
                 </td>
               </tr>
@@ -228,19 +243,19 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
   return (
     <div className={`container mx-auto p-4 md:p-6 lg:p-8 bg-transparent min-h-screen selection:bg-[#A0D468] selection:text-white`}>
-      <header className="mb-12 text-center py-10 bg-gray-900 rounded-2xl shadow-2xl relative overflow-hidden border-4 border-transparent">
+      <header className="mb-12 text-center py-10 rounded-2xl shadow-2xl relative overflow-hidden border border-white/10">
         <div className="absolute inset-0 bg-gradient-to-r from-[#009A44] via-[#8CC63F] to-[#009A44] bg-[length:200%_auto] animate-gradient"></div>
-        <div className="absolute inset-1 bg-gray-900 rounded-xl"></div>
+        <div className="absolute inset-0 backdrop-blur-md bg-white/5 rounded-2xl"></div>
         <div className="relative z-10">
-          <div className="animated-logo-background mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full">
+          <div className="mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full backdrop-blur-sm bg-white/10 p-2">
             <img 
               src={plant.logoUrl} 
               alt={t('plantSpecificLogoAlt')} 
               className="h-16 animated-footer-logo"
             />
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 tracking-tight">{plant.fullName}</h1>
-          <p className="text-xl md:text-2xl text-gray-300 font-light">{t(plant.titleKey)}</p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 tracking-tight drop-shadow-lg">{plant.fullName}</h1>
+          <p className="text-xl md:text-2xl text-gray-100 font-light drop-shadow">{t(plant.titleKey)}</p>
         </div>
         <style>
           {`

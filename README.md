@@ -5,6 +5,12 @@ Aplicación web interactiva para visualizar plantas de procesamiento de PetGas. 
 ## 🚀 Últimas Actualizaciones
 
 ### Mejoras Recientes (Junio 2024)
+- 🌟 **Nuevo Efecto de Partículas en el Navbar**
+  - Partículas con efecto de ondas fluidas y dinámicas
+  - Mayor tamaño para mejor visibilidad
+  - Concentración optimizada alrededor del logo
+  - Rendimiento optimizado para una experiencia fluida
+
 - 🎨 Mejoras en la interfaz de usuario con fondos transparentes en los encabezados
 - ✨ Optimización de la visualización de tarjetas de plantas
 - 🌐 Mejoras en la accesibilidad y etiquetas ARIA
@@ -24,6 +30,10 @@ Todas las plantas ahora incluyen información detallada sobre:
 - Requisitos operativos detallados
 - Análisis de producción y rendimiento
 - Consideraciones adicionales de instalación y operación
+
+## 🌟 Descripción General Detallada
+
+La tecnologia de PETGAS plasticos no reciclables mediante un proceso de pirólisis no catalítica, producimos simultaneamente: Parafina, Queroseno, Diesel, Gasolina, Gas ( Butano, Propano ) y Coque. Petgas garantiza la operación y el buen funcionamiento del sistema.
 
 ## 🌟 Plantas Disponibles
 

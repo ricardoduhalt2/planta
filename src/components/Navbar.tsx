@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { PlantData } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import NavbarParticles from './NavbarParticles';
 
 interface NavbarProps {
   plants: PlantData[];
@@ -16,8 +17,19 @@ const Navbar: React.FC<NavbarProps> = ({ plants, selectedPlantId, onSelectPlant,
     setLanguage(language === 'es' ? 'en' : 'es');
   };
 
+  const navRef = useRef<HTMLElement>(null);
+
   return (
-    <nav className="bg-gray-900/70 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-gray-700/50">
+    <nav 
+      ref={navRef}
+      className="bg-gray-900/70 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-gray-700/50 relative overflow-hidden h-16"
+      style={{
+        background: 'linear-gradient(to bottom, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.7) 100%)'
+      }}
+    >
+      <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none">
+        <NavbarParticles />
+      </div>
       <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <div onClick={onShowHome} className="cursor-pointer flex items-center group" aria-label={t('home')}>
           <div className="relative">

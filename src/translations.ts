@@ -93,9 +93,9 @@ export const translations: Record<Language, Record<string, any>> = {
     benefit_support_desc: "Asistencia técnica y estratégica continua de nuestro equipo de expertos.",
 
     // General Descriptions
-    p90_general_desc: 'La tecnología PETGAS transforma plásticos mediante una pirolisis no catalítica, produciendo parafina, queroseno, diésel, gasolina, coque y gas. PETGAS garantiza la operación y el buen funcionamiento del sistema.',
-    petgas_4k_general_desc: 'La tecnología PETGAS transforma plásticos mediante una pirolisis no catalítica, produciendo parafina, queroseno, diésel, gasolina, coque y gas. PETGAS garantiza la operación y el buen funcionamiento del sistema.',
-    petgas_700kg_general_desc: 'La tecnología PETGAS transforma plásticos mediante una pirolisis no catalítica, produciendo parafina, queroseno, diésel, gasolina y gas LP. PETGAS garantiza la operación y el buen funcionamiento del sistema.',
+    p90_general_desc: 'La tecnologia de PETGAS plasticos no reciclables mediante un proceso de pirólisis no catalítica, producimos simultaneamente: Parafina, Queroseno, Diesel, Gasolina, Gas ( Butano, Propano ) y Coque. Petgas garantiza la operación y el buen funcionamiento del sistema.',
+    petgas_4k_general_desc: 'La tecnologia de PETGAS plasticos no reciclables mediante un proceso de pirólisis no catalítica, producimos simultaneamente: Parafina, Queroseno, Diesel, Gasolina, Gas ( Butano, Propano ) y Coque. Petgas garantiza la operación y el buen funcionamiento del sistema.',
+    petgas_700kg_general_desc: 'La tecnologia de PETGAS plasticos no reciclables mediante un proceso de pirólisis no catalítica, producimos simultaneamente: Parafina, Queroseno, Diesel, Gasolina, Gas ( Butano, Propano ) y Coque. Petgas garantiza la operación y el buen funcionamiento del sistema.',
     
     // Transformation System Components (Names are from CommonText now, these are descriptions)
     [CommonText.REACTOR_SYSTEM_COMPONENT_NAME]: "Sistema de Reactor",

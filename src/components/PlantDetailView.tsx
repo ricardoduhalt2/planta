@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { PlantData, KeyValueSpec, ProductionTableEntry, PlantSection, CommonText } from '../types';
-import { PETGAS_DARK_GREY, PETGAS_LIGHT_GREY, PETGAS_MEDIUM_GREY, MODERN_BLUE, MODERN_TEAL } from '../constants';
+import { MODERN_BLUE, MODERN_TEAL } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import ChartComponent from './ChartComponent';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
@@ -393,13 +393,28 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
 
   return (
     <div className={`container mx-auto p-4 md:p-6 lg:p-8 bg-transparent min-h-screen selection:bg-[#A0D468] selection:text-white`}>
-      <header className="mb-12 text-center py-10 rounded-2xl relative overflow-hidden">
+      <header className="mb-12 text-center py-10 rounded-2xl relative overflow-hidden" style={{
+        minHeight: '300px',
+        position: 'relative',
+        zIndex: 1
+      }}>
         {/* Fondo con efecto vidrio */}
         <div className="absolute inset-0 backdrop-blur-md bg-black/30 rounded-2xl border border-white/10"></div>
         
-        {/* Borde con gradiente animado */}
-        <div className="absolute inset-0 p-[1px] rounded-2xl">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#009A44] via-[#8CC63F] to-[#009A44] bg-[length:200%_auto] animate-gradient rounded-2xl"></div>
+        {/* Borde con gradiente animado y resplandor */}
+        <div className="absolute inset-0 p-[1px] rounded-2xl overflow-hidden">
+          {/* Capa de resplandor exterior */}
+          <div className="absolute inset-0 rounded-2xl" style={{
+            boxShadow: '0 0 25px 5px rgba(0, 255, 120, 0.8)',
+            animation: 'glowPulse 2.5s ease-in-out infinite',
+            filter: 'brightness(1.2)'
+          }}></div>
+          
+          {/* Contorno con gradiente */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#002f15] via-[#004d24] to-[#002f15] bg-[length:300%_auto] animate-gradient-slow rounded-2xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent z-10"></div>
+          {/* Fondo interior */}
+          <div className="absolute inset-0.5 rounded-[15px] bg-gradient-to-b from-gray-900/90 to-gray-900"></div>
         </div>
         
         <div className="relative z-10 bg-transparent">
@@ -422,9 +437,35 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
               50% { background-position: 100% 50%; }
               100% { background-position: 0% 50%; }
             }
+            @keyframes gradient-slow {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
             .animate-gradient {
               animation: gradient 3s ease-in-out infinite;
               background-size: 200% 200%;
+            }
+            .animate-gradient-slow {
+              animation: gradient-slow 8s ease-in-out infinite;
+              background-size: 300% 300%;
+            }
+            @keyframes glowPulse {
+              0% { 
+                box-shadow: 0 0 20px 5px rgba(0, 255, 120, 0.8);
+                opacity: 0.9;
+                filter: brightness(1.1) saturate(1.2);
+              }
+              50% { 
+                box-shadow: 0 0 40px 10px rgba(0, 255, 140, 1);
+                opacity: 1;
+                filter: brightness(1.3) saturate(1.5);
+              }
+              100% { 
+                box-shadow: 0 0 20px 5px rgba(0, 255, 120, 0.8);
+                opacity: 0.9;
+                filter: brightness(1.1) saturate(1.2);
+              }
             }
           `}
         </style>
@@ -468,10 +509,7 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
       {plant.generalDescriptionKey && (
          <AnimatedSectionCard titleKey={PlantSection.GENERAL_DESCRIPTION} iconType={PlantSection.GENERAL_DESCRIPTION}>
             <div className="prose prose-invert max-w-none">
-              <p className="text-lg text-gray-100 leading-relaxed mb-4">{t(plant.generalDescriptionKey)}</p>
-              {plant.generalDescriptionKey2 && (
-                <p className="text-gray-200 leading-relaxed">{t(plant.generalDescriptionKey2)}</p>
-              )}
+              <p className="text-lg text-gray-100 leading-relaxed">{t(plant.generalDescriptionKey)}</p>
             </div>
         </AnimatedSectionCard>
       )}

@@ -2,12 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import FooterBackground from './FooterBackground';
 
-// Estilos para el efecto de brillo parpadeante
+// Estilos para el efecto de brillo parpadeante mejorado
 const glowPulse = `
   @keyframes glowPulse {
-    0% { filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.7)); }
-    50% { filter: drop-shadow(0 0 20px rgba(140, 198, 63, 0.9)); }
-    100% { filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.7)); }
+    0% { 
+      filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.6)) 
+            drop-shadow(0 0 10px rgba(140, 198, 63, 0.4))
+            drop-shadow(0 0 15px rgba(140, 198, 63, 0.2));
+    }
+    50% { 
+      filter: drop-shadow(0 0 10px rgba(140, 198, 63, 0.8))
+            drop-shadow(0 0 25px rgba(140, 198, 63, 0.6))
+            drop-shadow(0 0 40px rgba(140, 198, 63, 0.3));
+    }
+    100% { 
+      filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.6))
+            drop-shadow(0 0 10px rgba(140, 198, 63, 0.4))
+            drop-shadow(0 0 15px rgba(140, 198, 63, 0.2));
+    }
   }
 `;
 
@@ -68,9 +80,14 @@ const Footer: React.FC = () => {
                 alt={t('petgasLogoAlt')} 
                 className={`h-14 mx-auto mb-3 transition-all duration-1000 ease-in-out ${isGlowing ? 'animate-glowPulse' : ''}`}
                 style={{
-                  animation: isGlowing ? 'glowPulse 2s infinite' : 'none',
-                  filter: isGlowing ? 'drop-shadow(0 0 10px rgba(140, 198, 63, 0.8))' : 'none',
-                  transition: 'filter 1s ease-in-out'
+                  animation: isGlowing ? 'glowPulse 3s infinite ease-in-out' : 'none',
+                  filter: isGlowing 
+                    ? 'drop-shadow(0 0 8px rgba(140, 198, 63, 0.7)) drop-shadow(0 0 16px rgba(140, 198, 63, 0.4))'
+                    : 'drop-shadow(0 0 5px rgba(140, 198, 63, 0.5))',
+                  transition: 'filter 1.5s ease-in-out',
+                  transform: 'translateZ(0)', // Mejora el renderizado
+                  backfaceVisibility: 'hidden', // Evita parpadeos
+                  WebkitBackfaceVisibility: 'hidden' // Para Safari
                 }}
               />
             </div>

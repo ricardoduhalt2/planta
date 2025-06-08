@@ -5,21 +5,42 @@ import FooterBackground from './FooterBackground';
 // Estilos para el efecto de brillo parpadeante mejorado
 const glowPulse = `
   @keyframes glowPulse {
-    0% { 
-      filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.6)) 
-            drop-shadow(0 0 10px rgba(140, 198, 63, 0.4))
-            drop-shadow(0 0 15px rgba(140, 198, 63, 0.2));
+    0%, 100% { 
+      filter: drop-shadow(0 0 2px rgba(140, 198, 63, 0.8))
+              drop-shadow(0 0 8px rgba(140, 198, 63, 0.6))
+              drop-shadow(0 0 12px rgba(140, 198, 63, 0.3));
+      opacity: 0.9;
     }
     50% { 
-      filter: drop-shadow(0 0 10px rgba(140, 198, 63, 0.8))
-            drop-shadow(0 0 25px rgba(140, 198, 63, 0.6))
-            drop-shadow(0 0 40px rgba(140, 198, 63, 0.3));
+      filter: drop-shadow(0 0 4px rgba(140, 198, 63, 0.9))
+              drop-shadow(0 0 15px rgba(140, 198, 63, 0.7))
+              drop-shadow(0 0 25px rgba(140, 198, 63, 0.4));
+      opacity: 1;
     }
-    100% { 
-      filter: drop-shadow(0 0 5px rgba(140, 198, 63, 0.6))
-            drop-shadow(0 0 10px rgba(140, 198, 63, 0.4))
-            drop-shadow(0 0 15px rgba(140, 198, 63, 0.2));
-    }
+  }
+  
+  .glow-logo {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .glow-logo::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: radial-gradient(circle, rgba(140, 198, 63, 0.3) 0%, rgba(140, 198, 63, 0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .glow-logo.active::before {
+    opacity: 0.8;
+    animation: glowPulse 4s infinite ease-in-out;
   }
 `;
 
@@ -75,21 +96,22 @@ const Footer: React.FC = () => {
         >
           <div className="container mx-auto px-6 text-center">
             <div className="mb-6">
-              <img 
-                src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
-                alt={t('petgasLogoAlt')} 
-                className={`h-14 mx-auto mb-3 transition-all duration-1000 ease-in-out ${isGlowing ? 'animate-glowPulse' : ''}`}
-                style={{
-                  animation: isGlowing ? 'glowPulse 3s infinite ease-in-out' : 'none',
-                  filter: isGlowing 
-                    ? 'drop-shadow(0 0 8px rgba(140, 198, 63, 0.7)) drop-shadow(0 0 16px rgba(140, 198, 63, 0.4))'
-                    : 'drop-shadow(0 0 5px rgba(140, 198, 63, 0.5))',
-                  transition: 'filter 1.5s ease-in-out',
-                  transform: 'translateZ(0)', // Mejora el renderizado
-                  backfaceVisibility: 'hidden', // Evita parpadeos
-                  WebkitBackfaceVisibility: 'hidden' // Para Safari
-                }}
-              />
+              <div className="relative inline-block">
+                <div className={`glow-logo ${isGlowing ? 'active' : ''}`}>
+                  <img 
+                    src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
+                    alt={t('petgasLogoAlt')} 
+                    className="h-14 mx-auto mb-3 relative z-10"
+                    style={{
+                      transition: 'all 0.3s ease-in-out',
+                      transform: 'translateZ(0)',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+                    }}
+                  />
+                </div>
+              </div>
             </div>
             <p className="mb-3 text-sm text-gray-300">&copy; {currentYear} {t('footerRights')}</p>
             <p className="text-sm italic mb-4 text-gray-400">{t('footerSlogan')}</p>

@@ -259,23 +259,13 @@ export const translations: Record<Language, Record<string, any>> = {
     fin_analysis_kg_transformed_cycle: "Kg Totales Transformados por Ciclo",
     fin_analysis_gasoline_monthly: "Producción Mensual Estimada de Gasolina",
     fin_analysis_diesel_monthly: "Producción Mensual Estimada de Diésel",
-    fin_analysis_kerosene_monthly: "Producción Mensual Estimada de Queroseno",
-    fin_analysis_paraffin_monthly: "Producción Mensual Estimada de Parafina",
-    fin_analysis_coke_monthly: "Producción Mensual Estimada de Coque",
-    fin_analysis_manpower: "Mano de Obra Requerida",
-    
     // Price Info
     priceInfoTitle: "Información de Precios y Contacto",
-    p90_price_info: "Planta P-90: $225,000 USD",
-    petgas_4k_price_info: "PETGAS 4K - 1R: $1,000,000 USD",
-    petgas_4k_2r_price_info: "PETGAS 4K - 2R: $1,300,000 USD",
+    p90_price_info: "Planta P-90: Pregunta por el precio",
+    petgas_4k_price_info: "PETGAS 4K - 1R: Pregunta por el precio",
+    petgas_4k_2r_price_info: "PETGAS 4K - 2R: Pregunta por el precio",
     contactPrompt: "Para más detalles, cotizaciones personalizadas y consultas técnicas, por favor",
     contactLinkText: "contáctenos aquí",
-
-    // Charts
-    productionChartsTitle: 'Análisis de Producción',
-    liquidProductionTitle: 'Producción de Líquidos',
-    solidProductionTitle: 'Producción de Sólidos',
     chartLiquidProdTitle: "Producción Estimada de Líquidos por Ciclo",
     chartSolidProdTitle: "Producción Estimada de Sólidos por Ciclo",
     liters: "Litros",
@@ -541,22 +531,15 @@ export const translations: Record<Language, Record<string, any>> = {
     fin_analysis_gasoline_monthly: "Estimated Monthly Gasoline Production",
     fin_analysis_diesel_monthly: "Estimated Monthly Diesel Production",
     fin_analysis_kerosene_monthly: "Estimated Monthly Kerosene Production",
-    fin_analysis_paraffin_monthly: "Estimated Monthly Paraffin Production",
-    fin_analysis_coke_monthly: "Estimated Monthly Coke Production",
-    fin_analysis_manpower: "Manpower Required",
-
-    // Price Info
-    priceInfoTitle: "Price Information & Contact",
-    p90_price_info: "P-90 Plant: $225,000 USD",
-    petgas_4k_price_info: "PETGAS 4K - 1R: $1,000,000 USD",
-    petgas_4k_2r_price_info: "PETGAS 4K - 2R: $1,300,000 USD",
-    contactPrompt: "For more details, custom quotes, and technical inquiries, please",
+    
+    // Price Info (English)
+    priceInfoTitle: "Pricing and Contact Information",
+    p90_price_info: "P-90 Plant: Ask for price",
+    petgas_4k_price_info: "PETGAS 4K - 1R: Ask for price",
+    petgas_4k_2r_price_info: "PETGAS 4K - 2R: Ask for price",
+    contactPrompt: "For more details, personalized quotes, and technical inquiries, please",
     contactLinkText: "contact us here",
     
-    // Charts
-    chartLiquidProdTitle: "Estimated Liquid Production per Cycle",
-    chartSolidProdTitle: "Estimated Solid Production per Cycle",
-    liters: "Liters",
     kilograms: "Kilograms",
     chartGenericAriaLabel: "Chart",
     // Footer

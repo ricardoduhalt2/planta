@@ -420,7 +420,7 @@ const PlantDetailView: React.FC<{ plant: PlantData }> = ({ plant }) => {
         <div className="relative z-10 bg-transparent">
           <div className="mx-auto mb-5 flex items-center justify-center w-24 h-24 rounded-full backdrop-blur-sm bg-white/10 p-2 border border-white/10">
             <img 
-              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
+              src="/images/LOGO PETGAS NEW.png" 
               alt={t('plantSpecificLogoAlt')} 
               className="h-16 animated-footer-logo"
             />

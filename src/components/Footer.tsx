@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
               <div className="relative inline-block">
                 <div className={`glow-logo ${isGlowing ? 'active' : ''}`}>
                   <img 
-                    src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png" 
+                    src="/images/LOGO PETGAS NEW.png" 
                     alt={t('petgasLogoAlt')} 
                     className="h-14 mx-auto mb-3 relative z-10"
                     style={{

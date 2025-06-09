@@ -4,11 +4,11 @@ import { PlantData, CommonText, PlantSection } from './types';
 export const LOGO_URLS = {
   es: {
     main: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-esp1.png',
-    navbar: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-esp1.png'
+    navbar: '/images/LOGO PETGAS NEW.png'
   },
   en: {
     main: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-ingles1.png',
-    navbar: 'https://www.petgas.com.mx/wp-content/uploads/2023/03/logo-PETGAS-hor-ingles1.png'
+    navbar: '/images/LOGO PETGAS NEW.png'
   }
 };
 
@@ -23,7 +23,7 @@ const P90_DATA: PlantData = {
   cardDisplayNameKey: 'p90_card_display_name',
   titleKey: 'p90_title', // Translation key for the title
   logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2025/06/p01.jpeg', // Updated P-90 image
+  mainImage: '/images/P-90.jpeg', // Updated P-90 image
   generalities: [
     { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'p90_process_content' },
     { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'p90_energy_self_sufficiency_content' },
@@ -135,7 +135,7 @@ const PETGAS_4K_DATA: PlantData = {
   cardDisplayNameKey: 'petgas_4k_card_display_name',
   titleKey: 'petgas_4k_title', // Translation key for the title
   logoUrl: NAVBAR_LOGO_URL,
-  mainImage: 'https://www.petgas.com.mx/wp-content/uploads/2025/06/PLANTA-R1.jpeg', // Updated 4K-1R plant image
+  mainImage: '/images/4k-1R.jpeg', // Updated 4K-1R plant image
   generalities: [
     { id: 'g1', titleKey: CommonText.PROCESS_TITLE, contentKey: 'petgas_4k_process_content' },
     { id: 'g2', titleKey: CommonText.ENERGY_SELF_SUFFICIENCY_TITLE, contentKey: 'petgas_4k_energy_self_sufficiency_content' },

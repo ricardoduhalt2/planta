@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ plants, selectedPlantId, onSelectPlant,
         <div onClick={onShowHome} className="cursor-pointer flex items-center group" aria-label={t('home')}>
           <div className="relative">
             <img 
-              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png"
+              src="/images/LOGO PETGAS NEW.png"
               alt={t('petgasLogoAlt')} 
               className="h-10 md:h-12 mr-2 transform group-hover:scale-105 transition-transform duration-200 relative z-10"
               style={{

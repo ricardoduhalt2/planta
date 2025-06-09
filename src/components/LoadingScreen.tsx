@@ -256,7 +256,7 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
     
     // Cargar imagen del logo
     const img = new Image();
-    img.src = 'https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png';
+    img.src = '/images/LOGO PETGAS NEW.png';
     
     const onImageLoad = () => {
       resourceLoaded();
@@ -343,7 +343,7 @@ const LoadingScreen = ({ onLoaded }: { onLoaded: () => void }) => {
         >
           <div className="relative inline-block">
             <img 
-              src="https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png"
+              src="/images/LOGO PETGAS NEW.png"
               alt="PETGAS" 
               className="h-16 mx-auto mb-1 drop-shadow-lg"
             />

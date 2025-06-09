@@ -26,7 +26,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ plants, onSelectPlant }) => {
   return (
     <div className="min-h-[calc(100vh-70px)] bg-transparent flex flex-col items-center justify-center p-6 text-center selection:bg-[#A0D468] selection:text-white">
       <img 
-        src={LOGO_URLS[language as keyof typeof LOGO_URLS].main} 
+        src={LOGO_URLS[language as keyof typeof LOGO_URLS].main}
         alt={t('petgasMainLogoAlt')}
         className="hero-logo-effects w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto h-auto mb-10 mt-8"
       />

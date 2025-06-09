@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './MarqueeText.css';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const LOGO_URL = 'https://www.petgas.com.mx/wp-content/uploads/2025/06/LOGO-PETGAS-NEW.png';
+const LOGO_URL = '/images/LOGO PETGAS NEW.png';
 
 interface MarqueeTextProps {
   text: string;
@@ -13,7 +13,7 @@ interface MarqueeTextProps {
 const MarqueeText: React.FC<MarqueeTextProps> = ({ 
   text, 
   className = '',
-  speed = 20 
+  speed = 20 // Se mantiene en las props para futuros usos
 }) => {
   const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
